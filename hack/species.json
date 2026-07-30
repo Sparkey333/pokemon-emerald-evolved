@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "source": "Pokemon Evolved v1.0 community guide (Scribd/PokeHarbor/GBAtemp)",
+    "official_rom": "AtSign8877 Pokemon Evolved (LeafGreen)",
+    "our_base": "pret/pokeemerald"
+  },
+  "official": {
+    "grass": [
+      { "id": "ECOSAUR", "name": "ECOSAUR", "from": "VENUSAUR", "method": "LEVEL", "param": 41, "types": ["GRASS", "POISON"], "ability": "CHLOROPHYLL" },
+      { "id": "TERARISAUR", "name": "TERARISAUR", "from": "ECOSAUR", "method": "LEVEL", "param": 52, "types": ["GRASS", "POISON"], "ability": "CHLOROPHYLL" },
+      { "id": "SYMBISAUR", "name": "SYMBISAUR", "from": "TERARISAUR", "method": "LEVEL", "param": 65, "types": ["GRASS", "POISON"], "ability": "CHLOROPHYLL" }
+    ],
+    "fire": [
+      { "id": "CHARIGUANA", "name": "CHARIGUANA", "from": "CHARIZARD", "method": "LEVEL", "param": 41, "types": ["FIRE", "FLYING"], "ability": "BLAZE", "ref_image": "pokeharbor ph-7" },
+      { "id": "CHARIANA", "name": "CHARIANA", "from": "CHARIGUANA", "method": "LEVEL", "param": 52, "types": ["FIRE", "WATER"], "ability": "MARVEL_SCALE" },
+      { "id": "CHARIATHAN", "name": "CHARIATHAN", "from": "CHARIANA", "method": "LEVEL", "param": 65, "types": ["FIRE", "WATER"], "ability": "MARVEL_SCALE" }
+    ],
+    "water": [
+      { "id": "FERRAPIN", "name": "FERRAPIN", "from": "BLASTOISE", "method": "LEVEL", "param": 41, "types": ["WATER", "WATER"], "ability": "TORRENT" },
+      { "id": "FORTOISE", "name": "FORTOISE", "from": "FERRAPIN", "method": "LEVEL", "param": 52, "types": ["WATER", "STEEL"], "ability": "SHELL_ARMOR" },
+      { "id": "TURTILLERY", "name": "TURTILLERY", "from": "FORTOISE", "method": "LEVEL", "param": 65, "types": ["WATER", "STEEL"], "ability": "SHELL_ARMOR" }
+    ]
+  },
+  "diy": {
+    "grass": [
+      { "id": "FLORASAUR", "name": "FLORASAUR", "from": "VENUSAUR", "method": "ITEM", "param": "LEAF_STONE", "types": ["GRASS", "POISON"], "ability": "OVERGROW", "note": "Alt branch — fan sheet diverges: larger bloom, no symbiotic armor" },
+      { "id": "VERDANTAUR", "name": "VERDANTAUR", "from": "FLORASAUR", "method": "LEVEL", "param": 52, "types": ["GRASS", "POISON"], "ability": "CHLOROPHYLL" }
+    ],
+    "fire": [
+      { "id": "CHARBLAZE", "name": "CHARBLAZE", "from": "CHARIZARD", "method": "ITEM", "param": "FIRE_STONE", "types": ["FIRE", "FLYING"], "ability": "BLAZE", "note": "Alt branch — stays aerial fire unlike official Chariana water typing" },
+      { "id": "INFERNODRAKE", "name": "INFERNODRAKE", "from": "CHARBLAZE", "method": "LEVEL", "param": 52, "types": ["FIRE", "DRAGON"], "ability": "BLAZE" }
+    ],
+    "water": [
+      { "id": "TORRENTOISE", "name": "TORRENTOISE", "from": "BLASTOISE", "method": "ITEM", "param": "WATER_STONE", "types": ["WATER", "WATER"], "ability": "TORRENT", "note": "Alt branch — no steel plating vs official Fortoise" },
+      { "id": "TSUNAMOISE", "name": "TSUNAMOISE", "from": "TORRENTOISE", "method": "LEVEL", "param": 52, "types": ["WATER", "WATER"], "ability": "TORRENT" }
+    ]
+  },
+  "vanilla_starters": {
+    "grass": ["BULBASAUR", "IVYSAUR", "VENUSAUR"],
+    "fire": ["CHARMANDER", "CHARMELEON", "CHARIZARD"],
+    "water": ["SQUIRTLE", "WARTORTLE", "BLASTOISE"]
+  }
+}
