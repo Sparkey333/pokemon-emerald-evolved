@@ -1,0 +1,18 @@
+# ── Third-party art — NEVER commit, never re-host ───────────────────────────
+# vault/kanto-151  : Nintendo / Game Freak sprites (via PokeAPI)
+# vault/evolved/*  : Pokemon Evolved fan art (calicorn, kattenkg, jordanosart, xiapher)
+# sheets/          : rendered sheets that embed the above
+# All of it is regenerable: tools/pull-kanto-151.sh, tools/pull_evolved_art.py,
+# tools/slice_montage.py, tools/gen_sheets.py
+vault/
+sheets/
+
+# Generated / heavy
+dist/
+node_modules/
+release/
+__pycache__/
+*.pyc
+
+.DS_Store
+._*

@@ -1,0 +1,19 @@
+{
+  "name": "pokemon-emerald-evolved",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pokémon Emerald Evolved — Official vs DIY starter showcase (Tauri)",
+  "scripts": {
+    "dev": "python3 -m http.server 1420 --directory ui --bind 127.0.0.1",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-opener": "^2.5.4"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4"
+  }
+}

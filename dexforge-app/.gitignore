@@ -1,0 +1,12 @@
+# dist/ is a COPY of the Indigo Dexforge payload, including third-party reference
+# art (Nintendo/Game Freak sprites, Pokemon Evolved fan art). Never commit it.
+# Regenerate: npm run sync
+dist/
+
+node_modules/
+src-tauri/target/
+src-tauri/gen/
+release/
+brand/candidates/
+.DS_Store
+._*

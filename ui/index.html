@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Emerald: Evolved</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --panel: #10182a;
+      --text: #e8edf8;
+      --muted: #8b9bc0;
+      --line: #243049;
+      --grass: #4ade80;
+      --fire: #fb923c;
+      --water: #38bdf8;
+      --official: #fbbf24;
+      --diy: #a78bfa;
+      --accent: #5eead4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse 90% 55% at 50% -10%, #1a2a4a 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 85% 80%, rgba(56,189,248,.12), transparent 50%),
+        radial-gradient(ellipse 40% 35% at 10% 70%, rgba(74,222,128,.1), transparent 45%),
+        var(--bg);
+      line-height: 1.55;
+    }
+    .titlebar-pad { height: 36px; -webkit-app-region: drag; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+    .brand {
+      padding: 1.5rem 0 1.75rem;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 1.5rem;
+    }
+    .brand .mark {
+      font-size: .72rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: .55rem;
+    }
+    .brand h1 {
+      font-size: clamp(1.85rem, 5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      background: linear-gradient(120deg, var(--grass), var(--water) 45%, var(--fire));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .brand p { color: var(--muted); max-width: 540px; margin: .7rem auto 0; font-size: .95rem; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat .n { font-size: 1.6rem; font-weight: 800; }
+    .stat .l { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: .15rem; }
+    .stat.g .n { color: var(--grass); }
+    .stat.f .n { color: var(--fire); }
+    .stat.w .n { color: var(--water); }
+    .board, .feedback {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .board h2, .feedback h2 {
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: .85rem;
+    }
+    .action {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      padding: .7rem 0;
+      border-top: 1px solid #1a2438;
+    }
+    .action:first-of-type { border-top: none; padding-top: 0; }
+    .action input { margin-top: .3rem; accent-color: var(--accent); width: 1rem; height: 1rem; }
+    .action.done .body { opacity: .45; text-decoration: line-through; }
+    .action .title { font-weight: 650; font-size: .95rem; }
+    .action .hint { color: var(--muted); font-size: .82rem; margin-top: .15rem; }
+    .row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .55rem; }
+    .btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: .55rem 1rem;
+      border-radius: 8px;
+      font-size: .88rem;
+      font-weight: 650;
+      color: #04110a;
+      background: linear-gradient(135deg, var(--accent), #2dd4bf);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+    }
+    .btn.sec {
+      background: #1e2a44;
+      color: var(--text);
+      border: 1px solid #334466;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .feedback p { color: var(--muted); font-size: .88rem; margin-bottom: .75rem; }
+    .foot {
+      text-align: center;
+      color: #5c6b8a;
+      font-size: .75rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 560px) {
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="titlebar-pad" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="brand">
+      <div class="mark">DarkHearts · Emerald ROM Hack</div>
+      <h1>Pokémon Emerald: Evolved</h1>
+      <p>Official Pokémon Evolved starter lines plus our DIY stone-branch alts — playable showcase for the Emerald port.</p>
+    </header>
+
+    <div class="stats" id="stats">
+      <div class="stat g"><div class="n" id="n-official">9</div><div class="l">Official stages</div></div>
+      <div class="stat f"><div class="n" id="n-diy">6</div><div class="l">DIY alt stages</div></div>
+      <div class="stat w"><div class="n">3</div><div class="l">Starter lines</div></div>
+    </div>
+
+    <section class="board">
+      <h2>Action board</h2>
+      <div class="action" data-id="open-showcase">
+        <input type="checkbox" id="c-showcase" />
+        <div class="body">
+          <div class="title">Open the Official vs DIY showcase</div>
+          <div class="hint">3D sprites, evolution paths, and power arenas for all three lines.</div>
+          <div class="row">
+            <a class="btn" href="showcase.html">Open showcase</a>
+          </div>
+        </div>
+      </div>
+      <div class="action" data-id="compare-paths">
+        <input type="checkbox" id="c-compare" />
+        <div class="body">
+          <div class="title">Compare stone branches vs level-up lines</div>
+          <div class="hint">DIY diverges at Venusaur / Charizard / Blastoise with Leaf, Fire, and Water Stones.</div>
+        </div>
+      </div>
+      <div class="action" data-id="build-rom">
+        <input type="checkbox" id="c-rom" />
+        <div class="body">
+          <div class="title">Build the GBA ROM (dev kit)</div>
+          <div class="hint">Needs pret tools + a legal Emerald base — we never ship ROMs.</div>
+          <div class="row">
+            <a class="btn sec" data-external href="https://github.com/Sparkey333/pokemon-emerald-evolved">Repo ↗</a>
+            <a class="btn sec" data-external href="https://github.com/pret/pokeemerald">pret/pokeemerald ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="action" data-id="research">
+        <input type="checkbox" id="c-research" />
+        <div class="body">
+          <div class="title">Skim Evolved research sources</div>
+          <div class="hint">Names and design cues from AtSign8877’s LeafGreen hack + community guides.</div>
+          <div class="row">
+            <a class="btn sec" data-external href="https://github.com/AtSign8877/Pokemon-Evolved">Pokémon Evolved ↗</a>
+            <a class="btn sec" data-external href="https://www.pokeharbor.com/2025/04/pokemon-evolved/">PokeHarbor ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="feedback">
+      <h2>Feedback</h2>
+      <p>Something off with a name, typing, or the showcase? Send a prefilled GitHub issue — diagnostics attach automatically.</p>
+      <div class="row">
+        <button class="btn" type="button" id="btn-issue">Open GitHub issue</button>
+        <button class="btn sec" type="button" id="btn-mail">Email instead</button>
+        <button class="btn sec" type="button" id="btn-copy">Copy diagnostics</button>
+      </div>
+    </section>
+
+    <p class="foot">v0.1.0 · © 2026 DarkHearts · Pokémon © Nintendo / Game Freak — fan project, not affiliated.</p>
+  </div>
+
+  <script>
+    const APP = { name: "Pokémon Emerald: Evolved", version: "0.1.0", repo: "Sparkey333/pokemon-emerald-evolved" };
+    const KEY = "pee-actions-v1";
+
+    async function openExternal(url) {
+      try {
+        const t = window.__TAURI__;
+        if (t) {
+          if (t.opener?.openUrl) { await t.opener.openUrl(url); return; }
+          if (t.core?.invoke) { await t.core.invoke("plugin:opener|open_url", { url }); return; }
+        }
+      } catch (_) {}
+      window.open(url, "_blank");
+    }
+
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest?.("a[href]");
+      if (!a) return;
+      const href = a.getAttribute("href") || "";
+      if (a.hasAttribute("data-external") || /^(https?:|mailto:)/i.test(href)) {
+        e.preventDefault();
+        openExternal(href);
+      }
+    });
+
+    function loadChecks() {
+      try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
+    }
+    function saveChecks(state) {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }
+    function wireBoard() {
+      const state = loadChecks();
+      document.querySelectorAll(".action").forEach((el) => {
+        const id = el.dataset.id;
+        const box = el.querySelector("input[type=checkbox]");
+        box.checked = !!state[id];
+        el.classList.toggle("done", box.checked);
+        box.addEventListener("change", () => {
+          state[id] = box.checked;
+          saveChecks(state);
+          el.classList.toggle("done", box.checked);
+        });
+      });
+    }
+
+    function diagnostics() {
+      const ua = navigator.userAgent || "";
+      return [
+        `App: ${APP.name} ${APP.version}`,
+        `UA: ${ua}`,
+        `Platform: ${navigator.platform || "?"}`,
+        `Tauri: ${window.__TAURI__ ? "yes" : "no"}`,
+        `When: ${new Date().toISOString()}`
+      ].join("\n");
+    }
+
+    function issueUrl() {
+      const title = encodeURIComponent(`[${APP.name}] Feedback`);
+      const body = encodeURIComponent(
+        `## What happened\n\n(describe)\n\n## Expected\n\n\n## Diagnostics\n\`\`\`\n${diagnostics()}\n\`\`\`\n`
+      );
+      return `https://github.com/${APP.repo}/issues/new?title=${title}&body=${body}`;
+    }
+
+    document.getElementById("btn-issue").onclick = () => openExternal(issueUrl());
+    document.getElementById("btn-mail").onclick = () => {
+      const subject = encodeURIComponent(`${APP.name} feedback`);
+      const body = encodeURIComponent(`What happened:\n\n\n\n---\n${diagnostics()}`);
+      openExternal(`mailto:brandon@darkhearts.app?subject=${subject}&body=${body}`);
+    };
+    document.getElementById("btn-copy").onclick = async () => {
+      const text = diagnostics();
+      try { await navigator.clipboard.writeText(text); } catch {
+        const ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+      }
+      const b = document.getElementById("btn-copy");
+      const prev = b.textContent;
+      b.textContent = "Copied";
+      setTimeout(() => { b.textContent = prev; }, 1200);
+    };
+
+    fetch("species.json").then(r => r.json()).then(data => {
+      const off = Object.values(data.official || {}).reduce((n, a) => n + a.length, 0);
+      const diy = Object.values(data.diy || {}).reduce((n, a) => n + a.length, 0);
+      document.getElementById("n-official").textContent = String(off);
+      document.getElementById("n-diy").textContent = String(diy);
+    }).catch(() => {});
+
+    wireBoard();
+  </script>
+</body>
+</html>

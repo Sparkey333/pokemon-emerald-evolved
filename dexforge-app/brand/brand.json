@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "app": {
+    "name": "Indigo Dexforge",
+    "identifier": "com.darkhearts.indigodexforge",
+    "purpose": "Sprite vault, sheets and animations",
+    "root": "/Users/ansom/Projects/indigo-dexforge-app"
+  },
+  "identity": {
+    "motif": "an indigo forge-anvil struck into a glowing pixel-sprite grid; deep indigo and violet jewel tones on near-black, ember highlights",
+    "styleTags": [
+      "cinematic",
+      "volumetric",
+      "jewel-tone",
+      "abyssal"
+    ],
+    "accents": [
+      "#2f9fd0",
+      "#2fa87c",
+      "#ef4444",
+      "#d9a441",
+      "#8b5cf6",
+      "#6366f1",
+      "#c25563",
+      "#243149"
+    ],
+    "base": "#080b14",
+    "ink": "#ece7ff"
+  },
+  "generation": {
+    "provider": {
+      "icon": "recraft",
+      "background": "gemini"
+    },
+    "seed": 304773,
+    "promptHash": "sha256:e69fd0d7105d1cae61ad1d7c0baaf94f",
+    "generatedAt": "2026-08-01T05:30:23.344474+00:00",
+    "engineVersion": "opal-iconforge/1.0.0"
+  },
+  "assets": {
+    "icon": {
+      "master": "brand/master/icon-1024.png",
+      "candidate": "c1",
+      "sha256": "ce21a96759951a4e"
+    },
+    "background": {
+      "master": "brand/master/dmg-background-660x400.png",
+      "candidate": "c3",
+      "sha256": "1d2c57a810789f0f"
+    },
+    "hero": null,
+    "og": null,
+    "volumeIcon": null
+  },
+  "dmg": {
+    "windowSize": {
+      "width": 660,
+      "height": 400
+    },
+    "appPosition": {
+      "x": 180,
+      "y": 190
+    },
+    "applicationFolderPosition": {
+      "x": 480,
+      "y": 190
+    }
+  },
+  "checks": {
+    "quietZones": {
+      "passed": true,
+      "appZone": {
+        "mean": 6.4,
+        "stddev": 1.51,
+        "p99": 10,
+        "max": 13
+      },
+      "appsZone": {
+        "mean": 6.44,
+        "stddev": 1.81,
+        "p99": 10,
+        "max": 87
+      },
+      "reasons": [],
+      "size": [
+        660,
+        400
+      ]
+    }
+  },
+  "approved": true,
+  "approvedAt": "2026-08-01T05:31:00.535671+00:00"
+}

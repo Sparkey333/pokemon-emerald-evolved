@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Evolved — Official vs DIY Starter Showcase</title>
+  <style>
+    :root { --bg:#0a0e1a; --panel:#121a2e; --text:#e8edf8; --muted:#8b9bc0; --grass:#4ade80; --fire:#fb923c; --water:#38bdf8; --official:#fbbf24; --diy:#a78bfa; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",system-ui,sans-serif;background:radial-gradient(ellipse at top,#1a2540 0%,var(--bg) 55%);color:var(--text);line-height:1.6}
+    header{text-align:center;padding:2rem 1rem;border-bottom:1px solid #243049}
+    header h1{font-size:clamp(1.5rem,4vw,2.2rem)}
+    header p{color:var(--muted);max-width:760px;margin:.5rem auto}
+    .badge{display:inline-block;padding:.2rem .7rem;border-radius:999px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:0 .25rem}
+    .badge.official{background:#422006;color:var(--official)}
+    .badge.diy{background:#2e1065;color:var(--diy)}
+    .research,.compare{max-width:960px;margin:1.25rem auto;padding:1.25rem;background:var(--panel);border:1px solid #2a3858;border-radius:12px}
+    .research h2,.compare h2{font-size:1rem;color:var(--accent);margin-bottom:.6rem}
+    .research ul{margin-left:1.2rem;color:var(--muted);font-size:.92rem}
+    .research a{color:#7dd3fc}
+    .compare table{width:100%;border-collapse:collapse;font-size:.85rem}
+    .compare th,.compare td{border:1px solid #2a3858;padding:.5rem;text-align:left}
+    .compare th{background:#1a2540;color:var(--muted)}
+    .ref-img{max-width:200px;border-radius:8px;border:2px solid #2a3858;margin:.5rem}
+    .lines{display:grid;gap:1.5rem;padding:1.5rem;max-width:1200px;margin:0 auto 3rem}
+    .line-card{background:var(--panel);border:1px solid #2a3858;border-radius:14px;overflow:hidden}
+    .line-header{padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+    .path-block{padding:0 1.25rem 1.25rem}
+    .path-label{font-size:.8rem;font-weight:700;margin:.75rem 0 .35rem;display:flex;align-items:center;gap:.5rem}
+    .path-label.official{color:var(--official)}
+    .path-label.diy{color:var(--diy)}
+    .stage-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;padding:.5rem 0}
+    .stage{text-align:center;width:118px}
+    .stage-name{font-size:.72rem;color:var(--muted);min-height:2.2em}
+    .stage-lvl{font-size:.65rem;color:#5c6b8a}
+    .sprite-3d-wrap{perspective:500px;width:88px;height:88px;margin:0 auto}
+    .sprite-3d{width:100%;height:100%;transform-style:preserve-3d;animation:spin3d 4s linear infinite}
+    .sprite-3d.paused{animation-play-state:paused}
+    @keyframes spin3d{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+    .sprite-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden}
+    .sprite-face canvas{width:72px;height:72px;image-rendering:pixelated;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
+    .sprite-face.front{transform:translateZ(24px)}.sprite-face.back{transform:rotateY(180deg) translateZ(24px)}
+    .sprite-face.left{transform:rotateY(-90deg) translateZ(24px)}.sprite-face.right{transform:rotateY(90deg) translateZ(24px)}
+    .evo-arrow{align-self:center;color:#4a5a7a;font-size:1.2rem}
+    .power-arena{position:relative;height:180px;margin:0 1.25rem 1.25rem;border-radius:10px;overflow:hidden;border:1px solid #2a3858;background:#0d1324}
+    .power-arena canvas{width:100%;height:100%;display:block}
+    .controls{text-align:center;padding:0 1rem 1rem}
+    .btn{background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;border:none;padding:.65rem 1.25rem;border-radius:8px;cursor:pointer;margin:.25rem;font-size:.9rem}
+    .btn.sec{background:#2a3858}
+    footer{text-align:center;padding:1.5rem;color:#5c6b8a;font-size:.78rem;border-top:1px solid #243049}
+  </style>
+</head>
+<body>
+<header>
+  <p style="margin-bottom:.75rem"><a href="index.html" style="color:#5eead4;text-decoration:none;font-size:.85rem;font-weight:700">← Dashboard</a></p>
+  <h1>Pokémon Evolved — Official vs DIY Starters</h1>
+  <p>Community-researched evolution sheets compared with our Emerald ROM hack alternate branches. <span class="badge official">Official Evolved</span> <span class="badge diy">Our DIY Alts</span></p>
+</header>
+
+<section class="research">
+  <h2>Research sources (Reddit / community / guides)</h2>
+  <ul>
+    <li><strong>Pokémon Evolved</strong> by AtSign8877 — LeafGreen hack, 151→354 species. <a href="https://github.com/AtSign8877/Pokemon-Evolved">GitHub</a> · <a href="https://pkmnevolved.com/">Site</a></li>
+    <li><strong>Evolution data</strong> from Pokémon Evolved v1.0 Complete Guide (Scribd/community mirror)</li>
+    <li><strong>Screenshot refs:</strong> <a href="https://www.pokeharbor.com/2025/04/pokemon-evolved/">PokeHarbor</a> — <em>Chariguana</em>, Butteflare, Beebrute, Hydrados, etc.</li>
+    <li><strong>GBAtemp</strong> coverage of extended Kanto lines</li>
+    <li><strong>Not from Evolved:</strong> In-Progress Pokémon's <em>Charguana</em> (pre-Charmeleon) is a separate fan line — we do not use it</li>
+  </ul>
+  <p style="margin-top:.75rem;font-size:.85rem;color:var(--muted)">
+    <img class="ref-img" src="https://www.pokeharbor.com/wp-content/uploads/2025/04/Pokemon-Evolved-7-300x200-1.webp" alt="Chariguana official screenshot" />
+    Official <strong>Chariguana</strong> (Fire/Flying @ Lv41) — lazy iguana Charizard extension from Pokémon Evolved.
+  </p>
+</section>
+
+<section class="compare">
+  <h2>Official vs DIY — key differences</h2>
+  <table>
+    <tr><th>Line</th><th>Official Evolved (level-up)</th><th>Our DIY (stone branch)</th><th>Difference</th></tr>
+    <tr><td>Grass</td><td>Ecosaur → Terarisaur → Symbisaur</td><td>Florasaur → Verdantaur</td><td>Official adds symbiotic armor stages; DIY emphasizes oversized floral bloom</td></tr>
+    <tr><td>Fire</td><td>Chariguana → Chariana (Fire/Water) → Chariathan</td><td>Charblaze → Infernodrake (Fire/Dragon)</td><td>Official gains Water typing; DIY stays aerial fire/dragon</td></tr>
+    <tr><td>Water</td><td>Ferrapin → Fortoise (Water/Steel) → Turtillery</td><td>Torrentoise → Tsunamoise</td><td>Official adds Steel armor; DIY stays pure Water tsunami theme</td></tr>
+  </table>
+</section>
+
+<div class="controls">
+  <button class="btn" id="btnSpin">Pause 3D Rotation</button>
+  <button class="btn sec" id="btnPower">Replay Powers</button>
+  <button class="btn sec" id="btnDl">Download HTML</button>
+</div>
+
+<main class="lines" id="lines"></main>
+<footer>
+  Vanilla stages 1–3: PokeAPI FRLG sprites. Official stages 4–6: names from Evolved guide; sprites placeholder/recolors until in-game import. DIY stages: canvas-generated for our <code>pokemon-emerald-evolved</code> ROM hack.
+</footer>
+
+<script>
+const API = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-iii/firered-leafgreen/';
+
+const LINES = [
+  {
+    id:'grass', name:'Bulbasaur Line', type:'Grass / Poison', element:'grass', color:'#4ade80', move:'Solar Beam',
+    official: [
+      { name:'Bulbasaur', api:1, lvl:'Start' }, { name:'Ivysaur', api:2, lvl:'Lv16' }, { name:'Venusaur', api:3, lvl:'Lv32' },
+      { name:'Ecosaur', evolved:'grass', stage:4, lvl:'Lv41' }, { name:'Terarisaur', evolved:'grass', stage:5, lvl:'Lv52' }, { name:'Symbisaur', evolved:'grass', stage:6, lvl:'Lv65' }
+    ],
+    diy: [
+      { name:'Florasaur', evolved:'grass', stage:4, lvl:'Leaf Stone' }, { name:'Verdantaur', evolved:'grass', stage:5, lvl:'Lv52' }
+    ]
+  },
+  {
+    id:'fire', name:'Charmander Line', type:'Fire', element:'fire', color:'#fb923c', move:'Flamethrower',
+    official: [
+      { name:'Charmander', api:4, lvl:'Start' }, { name:'Charmeleon', api:5, lvl:'Lv16' }, { name:'Charizard', api:6, lvl:'Lv36' },
+      { name:'Chariguana', evolved:'fire', stage:4, lvl:'Lv41' }, { name:'Chariana', evolved:'fire', stage:5, lvl:'Lv52' }, { name:'Chariathan', evolved:'fire', stage:6, lvl:'Lv65' }
+    ],
+    diy: [
+      { name:'Charblaze', evolved:'fire', stage:4, lvl:'Fire Stone' }, { name:'Infernodrake', evolved:'fire', stage:5, lvl:'Lv52' }
+    ]
+  },
+  {
+    id:'water', name:'Squirtle Line', type:'Water', element:'water', color:'#38bdf8', move:'Hydro Pump',
+    official: [
+      { name:'Squirtle', api:7, lvl:'Start' }, { name:'Wartortle', api:8, lvl:'Lv16' }, { name:'Blastoise', api:9, lvl:'Lv36' },
+      { name:'Ferrapin', evolved:'water', stage:4, lvl:'Lv41' }, { name:'Fortoise', evolved:'water', stage:5, lvl:'Lv52' }, { name:'Turtillery', evolved:'water', stage:6, lvl:'Lv65' }
+    ],
+    diy: [
+      { name:'Torrentoise', evolved:'water', stage:4, lvl:'Water Stone' }, { name:'Tsunamoise', evolved:'water', stage:5, lvl:'Lv52' }
+    ]
+  }
+];
+
+let spinning = true;
+const engines = [];
+
+function drawSprite(ctx, line, st, idx) {
+  const w=64,h=64,cx=32,cy=36, s=st.stage||idx;
+  ctx.clearRect(0,0,w,h);
+  const sc = 0.85 + (s-1)*0.1;
+  if (line.id==='grass') {
+    ctx.fillStyle='#3d9a5f'; ctx.beginPath(); ctx.ellipse(cx,cy+8,14*sc,12*sc,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#5ecf7a'; ctx.beginPath(); ctx.ellipse(cx,cy,16*sc,14*sc,0,0,Math.PI*2); ctx.fill();
+    for(let i=0;i<4+s;i++){const a=i/(4+s)*Math.PI*2;ctx.fillStyle=['#e879f9','#c084fc'][i%2];ctx.beginPath();ctx.ellipse(cx+Math.cos(a)*12*sc,cy-10+Math.sin(a)*7*sc,5*sc,3*sc,a,0,Math.PI*2);ctx.fill()}
+    ctx.fillStyle='#fde047'; ctx.beginPath(); ctx.arc(cx,cy-10,4*sc,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#111'; ctx.fillRect(cx-5,cy,2,2); ctx.fillRect(cx+3,cy,2,2);
+  } else if (line.id==='fire') {
+    ctx.fillStyle='#f97316'; ctx.beginPath(); ctx.ellipse(cx,cy+4,13*sc,14*sc,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=s>4?'#b91c1c':'#dc2626';
+    ctx.beginPath(); ctx.moveTo(cx-10,cy-6); ctx.lineTo(cx-26,cy-18); ctx.lineTo(cx-8,cy+2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx+10,cy-6); ctx.lineTo(cx+26,cy-18); ctx.lineTo(cx+8,cy+2); ctx.fill();
+    ctx.fillStyle='#fde047'; ctx.fillRect(cx-4,cy+12,8,6+s*2);
+    ctx.fillStyle='#111'; ctx.fillRect(cx-4,cy-4,2,2); ctx.fillRect(cx+3,cy-4,2,2);
+  } else {
+    ctx.fillStyle='#7dd3fc'; ctx.beginPath(); ctx.ellipse(cx,cy+6,13*sc,10*sc,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=s>4?'#1e3a8a':'#1d4ed8'; ctx.beginPath(); ctx.ellipse(cx,cy-2,17*sc,13*sc,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#94a3b8'; ctx.fillRect(cx-20,cy-3,8,5); ctx.fillRect(cx+12,cy-3,8,5);
+    ctx.fillStyle='#7dd3fc'; ctx.beginPath(); ctx.ellipse(cx,cy-13,8*sc,7*sc,0,0,Math.PI*2); ctx.fill();
+  }
+}
+
+async function loadApi(id){return new Promise(r=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>{const c=document.createElement('canvas');c.width=64;c.height=64;const x=c.getContext('2d');x.imageSmoothingEnabled=false;const sc=Math.min(64/i.width,64/i.height)*.9;const w=i.width*sc,h=i.height*sc;x.drawImage(i,(64-w)/2,(64-h)/2,w,h);r(c)};i.onerror=()=>r(null);i.src=API+id+'.png'})}
+
+function sideView(src,side){const c=document.createElement('canvas');c.width=64;c.height=64;const x=c.getContext('2d');x.imageSmoothingEnabled=false;const sq=side==='front'?1:.42,fl=side==='back'?-1:1;x.translate(32,32);x.scale(sq*fl,1);x.drawImage(src,-32,-32,64,64);return c}
+function mk3d(src){const w=document.createElement('div');w.className='sprite-3d-wrap';const r=document.createElement('div');r.className='sprite-3d';['front','right','back','left'].forEach(s=>{const f=document.createElement('div');f.className='sprite-face '+s;f.appendChild(sideView(src,s));r.appendChild(f)});w.appendChild(r);return w}
+
+class Power{constructor(cv,type){this.c=cv;this.x=cv.getContext('2d');this.type=type;this.p=[];this.t=0;this.resize();this.burst();requestAnimationFrame(()=>this.tick())}
+resize(){const r=this.c.parentElement.getBoundingClientRect();this.c.width=r.width;this.c.height=r.height;this.w=r.width;this.h=r.height}
+burst(){this.t=0;this.p=[];const cx=this.w/2,cy=this.h/2;for(let i=0;i<40;i++){const a=i/40*Math.PI*2;this.p.push({x:cx,y:cy,vx:Math.cos(a)*2,vy:Math.sin(a)*2,l:1,s:3+Math.random()*3})}}
+tick(){this.t++;this.x.fillStyle='rgba(13,19,36,.2)';this.x.fillRect(0,0,this.w,this.h);
+  if(this.t<80){const p=this.t/80,cx=this.w/2,cy=this.h/2;if(this.type==='grass'){this.x.fillStyle=`rgba(74,222,128,${.6-p*.5})`;this.x.fillRect(cx-4,cy-60*p,8,60*p)}else if(this.type==='fire'){this.x.beginPath();this.x.arc(cx,cy,20+50*p,0,Math.PI*2);this.x.fillStyle=`rgba(251,146,60,${.7-p*.5})`;this.x.fill()}else{this.x.strokeStyle=`rgba(56,189,248,${.8-p*.5})`;this.x.lineWidth=3;this.x.beginPath();this.x.arc(cx,cy+8,15+55*p,Math.PI,0);this.x.stroke()}}
+  this.p=this.p.filter(q=>{q.l-=.015;q.x+=q.vx;q.y+=q.vy;return q.l>0&&(this.x.globalAlpha=q.l,this.x.fillStyle=this.type==='fire'?'#fb923c':this.type==='water'?'#38bdf8':'#4ade80',this.x.beginPath(),this.x.arc(q.x,q.y,q.s*q.l,0,Math.PI*2),this.x.fill(),this.x.globalAlpha=1),q.l>0});
+  if(this.t>100&&!this.p.length){this.burst()}requestAnimationFrame(()=>this.tick())}}
+
+function renderPath(container, stages, line, label, cls) {
+  const block = document.createElement('div');
+  block.className = 'path-block';
+  block.innerHTML = `<div class="path-label ${cls}"><span class="badge ${cls}">${label}</span> evolution path</div>`;
+  const row = document.createElement('div'); row.className = 'stage-row';
+  block.appendChild(row);
+  (async () => {
+    for (let i = 0; i < stages.length; i++) {
+      const st = stages[i];
+      if (i) { const a = document.createElement('span'); a.className = 'evo-arrow'; a.textContent = '→'; row.appendChild(a); }
+      const el = document.createElement('div'); el.className = 'stage';
+      el.innerHTML = `<div class="stage-lvl">${st.lvl}</div><div class="stage-name">${st.name}</div>`;
+      let src = st.api ? await loadApi(st.api) : null;
+      if (!src) { const c = document.createElement('canvas'); c.width = 64; c.height = 64; drawSprite(c.getContext('2d'), line, st, i); src = c; }
+      el.appendChild(mk3d(src)); row.appendChild(el);
+    }
+  })();
+  container.appendChild(block);
+}
+
+async function init() {
+  const root = document.getElementById('lines');
+  for (const line of LINES) {
+    const card = document.createElement('article'); card.className = 'line-card';
+    card.innerHTML = `<div class="line-header"><h2>${line.name}</h2><span style="font-size:.8rem;color:var(--muted)">${line.type}</span></div>`;
+    renderPath(card, line.official, line, 'Official Evolved', 'official');
+    renderPath(card, line.diy, line, 'Our DIY Alt', 'diy');
+    const arena = document.createElement('div'); arena.className = 'power-arena';
+    const cv = document.createElement('canvas'); arena.appendChild(cv); card.appendChild(arena);
+    root.appendChild(card);
+    const e = new Power(cv, line.element); engines.push(e);
+  }
+}
+document.getElementById('btnSpin').onclick = () => { spinning = !spinning; document.querySelectorAll('.sprite-3d').forEach(e => e.classList.toggle('paused', !spinning)); document.getElementById('btnSpin').textContent = spinning ? 'Pause 3D Rotation' : 'Resume 3D Rotation'; };
+document.getElementById('btnPower').onclick = () => engines.forEach(e => e.burst());
+document.getElementById('btnDl').onclick = () => { const b = new Blob([document.documentElement.outerHTML], {type:'text/html'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'pokemon-evolved-official-vs-diy.html'; a.click(); };
+
+async function openExternal(url){
+  try{
+    const t=window.__TAURI__;
+    if(t){
+      if(t.opener?.openUrl){await t.opener.openUrl(url);return;}
+      if(t.core?.invoke){await t.core.invoke("plugin:opener|open_url",{url});return;}
+    }
+  }catch(e){}
+  window.open(url,"_blank");
+}
+document.addEventListener("click",(e)=>{
+  const a=e.target.closest?.("a[href]");
+  if(a&&/^(https?:|mailto:)/i.test(a.getAttribute("href")||"")){
+    e.preventDefault();
+    openExternal(a.getAttribute("href"));
+  }
+});
+
+init();
+</script>
+</body>
+</html>

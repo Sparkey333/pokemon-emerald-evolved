@@ -1,0 +1,13 @@
+{
+  "name": "indigo-dexforge-app",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Indigo Dexforge — desktop shell for the sprite vault, sheets and animations",
+  "scripts": {
+    "sync": "node scripts/sync-assets.mjs",
+    "tauri": "tauri",
+    "tauri:dev": "npm run sync && tauri dev",
+    "tauri:build": "npm run sync && tauri build"
+  },
+  "devDependencies": { "@tauri-apps/cli": "^2" }
+}

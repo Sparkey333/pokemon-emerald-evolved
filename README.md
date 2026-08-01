@@ -39,6 +39,16 @@ Source: Pokémon Evolved v1.0 community guide (Scribd), [PokeHarbor screenshots]
 
 DIY forms differ from official: no Fire/Water Chariana typing, no Water/Steel Fortoise line, grass branch emphasizes bloom over symbiosis.
 
+## Quick start (app)
+
+```bash
+npm install
+npm run tauri:dev    # native window + hot reload
+npm run tauri:build  # .app under src-tauri/target/release/bundle/macos/
+```
+
+Desktop test DMG: `Pokemon-Emerald-Evolved_0.1.0_macOS_aarch64.dmg` (ad-hoc signed).
+
 ## Quick start (build ROM)
 
 ```bash
@@ -61,8 +71,10 @@ Output: `pokeemerald.gba`
 ## Project layout
 
 ```
+ui/                        # Tauri frontend (dashboard + showcase)
+src-tauri/                 # Tauri 2 shell (com.darkhearts.emeraldevolved)
 hack/species.json          # Official + DIY species metadata
-hack/showcase/             # Interactive HTML evolution viewer
+hack/showcase/             # Source HTML evolution viewer
 hack/assets/sprites/diy/   # Generated DIY PNG sprites
 tools/bootstrap_evolved_starters.py
 tools/generate_sprites.mjs

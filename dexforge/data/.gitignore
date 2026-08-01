@@ -1,0 +1,5 @@
+# built artifacts (regenerate with tools/build_species.py)
+species.js
+species.json
+montage.js
+reveal-art.js

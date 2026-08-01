@@ -46,3 +46,22 @@ prefabs.json
 /pokeemerald_modern-*.png
 release/
 node_modules/
+src-tauri/target/
+*.dmg
+.DS_Store
+brand/candidates/
+brand/review/
+brand/master/
+
+# ── Indigo Dexforge (merged tooling) — generated + third-party reference art ──
+# Regenerate with dexforge/tools/*.py|sh ; never commit these.
+dexforge/vault/
+dexforge/sheets/
+dexforge/data/species.js
+dexforge/data/species.json
+dexforge/data/montage.js
+dexforge/data/reveal-art.js
+dexforge-app/dist/
+dexforge-app/src-tauri/target/
+dexforge-app/node_modules/
+dexforge-app/release/

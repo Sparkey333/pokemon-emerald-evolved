@@ -1,0 +1,16 @@
+[
+ {
+  "slug": "swarmwyrm",
+  "name": "Swarmwyrm",
+  "types": [
+   "dragon",
+   "bug"
+  ],
+  "evolvesFromName": null,
+  "method": "Lv 52",
+  "theme": "a dragon assembled out of a locust plague \u2014 the swarm hit critical density, learned a shape, and decided to keep it",
+  "prompt": "A long serpentine dragon that is obviously not one animal: its coiled body is packed from thousands of interlocked beetle wing-cases and locust bodies, every scale visibly an individual insect, so the whole outline crawls and frays. Its head is a wedge of interlocking carapace with a pair of huge scissoring mandibles standing in for jaws, crowned by two swept horns and a cluster of small compound eyes. Four stacked gossamer wings fan out from mid-body, and a thin haze of stragglers trails behind the tail, never quite catching up to the shape.",
+  "palette": "deep wine-red and blackberry-violet carapace with a dark beetle-green oil sheen across the wing-cases, midnight indigo between segments, a thin cold honey-gold glimmer through the wing membranes \u2014 iridescent but dark, never candy-bright",
+  "created": "2026-07-26T08:23:34.467Z"
+ }
+]

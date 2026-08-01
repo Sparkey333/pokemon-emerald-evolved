@@ -1,0 +1,262 @@
+[
+ {
+  "name": "Siegegnaw",
+  "types": [
+   "ground",
+   "steel"
+  ],
+  "role": "stage-4 extension of an original burrowing-rodent line (the humble tunneler's war-form)",
+  "theme": "the little gnawer that never stopped gnawing \u2014 its teeth outgrew its food and it started eating architecture",
+  "silhouette": "three hard shapes and nothing else: two enormous down-curved chisel-tusks crossing in an X in front of the snout, a boulder-shoulder hump twice the height of the head, and a blunt segmented battering-ram tail",
+  "prompt": "A siege-engine-sized rodent hunched low on short, splay-clawed forelimbs, its two lower incisors overgrown into crossed, down-curved chisel-tusks of tarnished dark metal, notched and chipped from chewing through stone foundations. Its shoulders rise into an armored hump of packed earth, broken masonry slabs and dragged-up root-veins standing twice the height of its head, and a blunt segmented tail lies coiled behind it like a battering ram. One small ember-lit eye glares from beneath a heavy brow ridge, whiskers stiff as iron rods, its slack jaw crusted with rock dust.",
+  "palette": "deep oxblood and dried wine-red fur over near-black earth-brown plating, tarnished dark bronze tusks with cold slate highlights, a single ember-orange eye, sparse burnt-copper rim light along the hump \u2014 everything sunk into a near-black base",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Broodspire",
+  "types": [
+   "bug",
+   "dark"
+  ],
+  "role": "stage-5 extension of an original grub-and-beetle line (the hive's last body)",
+  "theme": "the humble grub kept molting until its own back became the nest \u2014 a walking hive-tower carrying the entire brood",
+  "silhouette": "a tall chimney rising straight off a low, wide beetle slab \u2014 a T of tower over mass, unmistakable at any size, with four scythe-limbs bracketing the base",
+  "prompt": "A low, wide beetle-titan whose back has grown into a tall chimney-spire of stacked mud-and-chitin flues, vents along the tower breathing a faint pheromone haze from the packed brood sealed inside. Four long scythe-limbs fold in front of a broad armored head whose mandibles hang open like fortress gates, framing a cluster of small dead-flat eyes. Its underbody is lacquered in overlapping shield-plates, and tiny larval shapes crawl along the seams of the spire.",
+  "palette": "deep burnt amber and dark honey chitin over blackened bronze plating, umber shadow in every seam, tower vents lit with low smoldering gold from within, cold charcoal outlines \u2014 rich and dim, never bright",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Gorgecoil",
+  "types": [
+   "poison",
+   "dragon"
+  ],
+  "role": "stage-5 extension of an original small-serpent line (the canyon-filling final coil)",
+  "theme": "a serpent that never stopped growing and never threw its old skins away \u2014 it wears every life it outgrew",
+  "silhouette": "a stack of heavy coils under a ragged, layered cape of shed husks that flares far wider than the body \u2014 mantle first, coil-tower second, raised head last",
+  "prompt": "A canyon-filling constrictor stacked in heavy coils, wearing a ragged mantle of its own petrified shed skins \u2014 layer on layer of cracked, translucent husks draped from neck to shoulder like a shredded cloak, the widest shape on the whole animal. Its raised head is hooded in scarred scale-plate, jaw unhinged to show a ribbed throat and two curved fangs weeping heavy venom that pools between the coils. Slitted eyes sit sunk deep beneath a brow of overlapping plates.",
+  "palette": "deep bottle-green and dark forest scales with black banding, poisoned teal-green venom, dusty grey-violet shed husks, a faint sickly chartreuse only at the fang tips \u2014 saturated and dark, never neon",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Grievebell",
+  "types": [
+   "ghost",
+   "psychic"
+  ],
+  "role": "stage-5 extension of an original graveside-mourner line (the small sorrow that grew until it could toll)",
+  "theme": "a mourner that gathered every grief it stood over until it had enough weight to ring",
+  "silhouette": "a wide hanging bell of tattered shroud forming the entire lower body, topped by an empty hood \u2014 a triangle under a hollow cowl, with a dangling vertebrae clapper visible beneath the hem",
+  "prompt": "A towering hooded mourner whose entire lower body is a great hanging bell of tattered funeral shroud, its hem torn and swaying, a clapper of bound vertebrae dangling inside and grazing the rim. Above the bell rises an empty cowl, and in that darkness dozens of faint sorrowing faces surface and sink like reflections in deep water. Chain-thin arms hang from its shoulders, and a soundless ring warps the air in rings around the hem, guttering the shroud's edges into smoke.",
+  "palette": "deep plum and dark royal violet shroud over black, bruised indigo folds, cold bone-silver clapper and chains, faint pale-lilac face-glow inside the hood, no warm tones anywhere \u2014 funereal and dim",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Thawblight",
+  "types": [
+   "ice",
+   "poison"
+  ],
+  "role": "standalone original line \u2014 final stage of 2 (pre-evo: a knee-high frozen carcass-lump with one vent)",
+  "theme": "the thaw lets old sicknesses out \u2014 a walking slab of melting permafrost venting the gas and rot sealed under it for ten thousand years",
+  "silhouette": "a long low horizontal mass with a high domed back and three tall crooked spires off the spine \u2014 a mountain with chimneys, readable at 64px before the gas plume is even drawn",
+  "prompt": "A low, heavy quadruped like a musk ox carved out of black permafrost, its back a domed slab of layered ice strata with fossil bubbles, dead roots and old bone frozen visibly inside it. Three crooked vent-spires rise from its spine, each hissing a slow heavy plume of thawed gas that pools and creeps along the ground. Its head is broad and blunt under frost-matted fur with two dull chipped tusks, its legs are stumps of cloudy silt-packed ice, and meltwater runs off it in thick rivulets that steam where they touch bare earth.",
+  "palette": "deep glacial indigo and blue-black ice, peat-dark green-brown silt suspended inside it, bruised plum in the shadowed underside, a deep toxic moss-green glow down in the vents \u2014 lit like a lamp behind smoked glass, never bright",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Swarmwyrm",
+  "types": [
+   "dragon",
+   "bug"
+  ],
+  "role": "standalone original line \u2014 final stage of 3 (grub \u2192 swarm-cloud \u2192 wyrm)",
+  "theme": "a dragon assembled out of a locust plague \u2014 the swarm hit critical density, learned a shape, and decided to keep it",
+  "silhouette": "a bold S-coil with an X of four fanned wings across the middle and a mandibled wedge head; the deliberately ragged, granular body edge reads as 'made of many small things' even at tiny size",
+  "prompt": "A long serpentine dragon that is obviously not one animal: its coiled body is packed from thousands of interlocked beetle wing-cases and locust bodies, every scale visibly an individual insect, so the whole outline crawls and frays. Its head is a wedge of interlocking carapace with a pair of huge scissoring mandibles standing in for jaws, crowned by two swept horns and a cluster of small compound eyes. Four stacked gossamer wings fan out from mid-body, and a thin haze of stragglers trails behind the tail, never quite catching up to the shape.",
+  "palette": "deep wine-red and blackberry-violet carapace with a dark beetle-green oil sheen across the wing-cases, midnight indigo between segments, a thin cold honey-gold glimmer through the wing membranes \u2014 iridescent but dark, never candy-bright",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Thoughtquake",
+  "types": [
+   "psychic",
+   "rock"
+  ],
+  "role": "standalone original line \u2014 single-stage, no evolution (rare overworld encounter)",
+  "theme": "it thinks by being crushed \u2014 a standing stone that generates thought the way pressure generates a spark, so every step is a small idea and a small earthquake",
+  "silhouette": "a fat vertical trapezoid with a floating halo of broken chunks where a head should be; the negative space at the neck is the reading cue \u2014 nothing else in the set has a hole in its outline",
+  "prompt": "A headless standing megalith of a creature: a squat weathered slab torso scored with deep fracture lines, short pillar-stump legs, and heavy blunt arms folded across its front. Where its head should be there is only open air, and a slow ring of broken slab fragments orbits above the shoulders, tilting in unison to face whatever it is considering. Hairline cracks across its whole body flare with inner light each time it puts weight on a step, and rings of pressure ripple outward through the dust at its feet.",
+  "palette": "deep slate blue-violet stone, near-black umber packed into every crevice, dull deep-bronze weathering across the shoulders, and a deep true-blue light bleeding out of the fracture lines",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Cellrot",
+  "types": [
+   "electric",
+   "poison"
+  ],
+  "role": "standalone original line \u2014 final stage of 2 (pre-evo: a single leaking disc-cell that scuttles)",
+  "theme": "it powers itself by rotting \u2014 a living voltaic pile that has to corrode its own body to stay switched on, and leaks what it burns",
+  "silhouette": "a stack of thick rings for a torso, two blunt prongs forking off the shoulders, and a drip-line falling from both fists \u2014 reads as a battery in pure black",
+  "prompt": "A squat hunched creature whose torso is a stacked column of alternating metal discs and sodden felt pads bound in corroded straps \u2014 a living voltaic pile with legs. Crusted corrosion blooms out of every joint and a dark electrolyte weeps down the seams to drip off its knuckles, hissing and pitting whatever it lands on. Two blunt electrode prongs rise from its shoulders with a low steady arc crawling between them, above two small dull glows sunk deep in a pitted, half-eaten face.",
+  "palette": "deep verdigris teal corrosion over blue-black metal, plum-dark electrolyte running the seams, dull deep-bronze plates, and one hairline-thin cold arc of pale blue-white as the only real light \u2014 grimy and jewel-dark, never a neon cyan glow",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Longburn",
+  "types": [
+   "fire",
+   "ghost"
+  ],
+  "role": "standalone original line \u2014 final stage of 3 (ember \u2192 smolder \u2192 seam fire)",
+  "theme": "a coal seam caught fire sixty years ago and never went out \u2014 the fire is the ghost, and it is still eating the town from underneath",
+  "silhouette": "a long low wedge hugging the ground, humped with a broken crust of beams and slabs, with three thin smoke columns ticking straight up off its back \u2014 a flat horizontal mass with vertical marks, the opposite read from every upright design in the set",
+  "prompt": "A long, low, four-limbed thing with no true body \u2014 a heat-shimmer given shape, wearing a crust of ash, collapsed roof beams and buckled road asphalt across its back like a shell it dragged up out of the ground with it. Ember seams glow between the crust plates and breathe brighter with every exhale, and three thin columns of smoke rise straight off its shoulders in a slow constant stream that never stops. Its head is a low wedge of cracked slag with two long-burning coal eyes, and the ground behind it is sunken and steaming where it has already passed.",
+  "palette": "ash-grey and blue-black crust, deep ember-red and burnt-orange banked down in the seams, dark bruise-purple smoke, cindered brown timbers \u2014 the glow is deep and low like coals under a lid, never bright yellow",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Undertow",
+  "types": [
+   "water",
+   "ghost"
+  ],
+  "role": "standalone mythic legendary \u2014 single-of-its-kind, the drowned-deep encounter; deliberately unrelated to the Torrentoise line",
+  "theme": "the pull under the wave: a tide-serpent coiled into a standing whirlpool that takes things down and keeps them",
+  "silhouette": "a hooked crescent hood floating over a spinning cone \u2014 two clean stacked shapes, with trailing mantles breaking the cone's edge so it never reads as a spinning top",
+  "prompt": "A drowned tide-serpent coiled into a standing whirlpool: its long body spirals down into a slow-turning funnel of dark water, and from the top of the spiral rises a broad crescent hood shaped like a wave caught the instant before it breaks. Its face is a smooth eyeless mask with two sunken pits of cold light, and heavy kelp-like mantles hang from the hood, weighted with the pale bones of things it pulled under. Ropes of dull foam wind counter to the spiral, and drowned lanterns drift in the water around its base.",
+  "palette": "abyssal blue-green and deep teal water, drowned-indigo shadow inside the funnel, deep violet in the hollows, muted bone-grey foam and bone accents \u2014 cold, heavy, cinematic, nothing pastel",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Faultline",
+  "types": [
+   "ground",
+   "steel"
+  ],
+  "role": "standalone mythic legendary \u2014 single-of-its-kind, the deep-earth encounter that only surfaces when the crust breaks",
+  "theme": "a walking piece of the crust: the continent's broken seam wearing the shape of a beast",
+  "silhouette": "one long jagged sawtooth ridge from skull to tail over four blocky pillar legs and a low wedge head \u2014 a pure landscape read, horizon ridge on stumps",
+  "prompt": "A hunched, shield-backed titan built like a bison of bedrock on four blocky pillar legs, its entire back a single enormous slab of continental crust broken into a jagged mountain ridge running from skull to tail. The plates have pulled apart into glowing seams of magma, and its low-slung head is a wedge of dark iron with one continuous cracked ridge where eyes should be. Dust and shed gravel pour constantly from its flanks, and the ground splits into radiating black fissures under every footfall.",
+  "palette": "deep earthen brown and dark iron-grey plating, oxblood and deep crimson magma seams glowing from inside the cracks, near-black fissures, a dull bronze rim-light along the ridge \u2014 heat kept deep and molten, never orange-bright",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Totality",
+  "types": [
+   "dark",
+   "psychic"
+  ],
+  "role": "standalone mythic legendary \u2014 single-of-its-kind, the eclipse-hour encounter; thematically paired with Skyveil as the two sky-omens",
+  "theme": "the moment the sun goes out: a standing-stone figure wearing the eclipse where its face should be",
+  "silhouette": "a perfect circle with a spiked flare-halo atop a narrow vertical mantled column \u2014 a lollipop-and-pillar read, the most distinct shape in the set at 64px",
+  "prompt": "A tall, still, mantled figure standing in permanent eclipse: a slender near-black body draped in a heavy carved stone mantle, and where its head should be, a flawless black disc ringed by a burning corona. Two long arms hang from the mantle, ending in open hands that trail thin ribbons of shadow to the ground, and a second smaller ring of dark stone floats behind its shoulders like a halo seen edge-on. Everything about it is smooth, silent and vertical \u2014 the corona is the only living light on it.",
+  "palette": "near-black and deep violet-black mantle with carved edges caught in cold indigo rim-light, corona in deep antique gold with a thin deep-crimson inner edge \u2014 extreme value contrast, minimal hue count, solemn and cinematic",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Skyveil",
+  "types": [
+   "ice",
+   "electric"
+  ],
+  "role": "standalone mythic legendary \u2014 single-of-its-kind, the polar-night encounter; thematic counterpart to Totality",
+  "theme": "the aurora as an animal: a curtain of charged light that folds through the polar sky and has decided on a head",
+  "silhouette": "a long slow S-curve ribbon with a pleated fringe hem and a narrow arrowhead skull crest \u2014 the only creature in the set with no mass at all, reading by line instead of bulk",
+  "prompt": "An immense ribbon-serpent with no legs and no bulk at all, its body a long pleated curtain of light that folds and rewinds through the polar sky in a slow S. Its head is a narrow arrowhead crowned with a stiff fan of fringes above two deep slit eyes, and its whole trailing length hangs in vertical pleats like a drape, deepening from crown to hem. It has no feet \u2014 the lower edge of the curtain simply frays into a scatter of drifting charged sparks and fine ice crystals.",
+  "palette": "deep saturated jewel green and deep violet ribbons over a midnight blue-black ground, cold deep-teal midtones, sparse pale-blue sparks. CRITICAL: aurora colors stay deep and saturated like stained glass \u2014 absolutely no neon, no mint, no glowing cyan",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Truenorth",
+  "types": [
+   "flying",
+   "psychic"
+  ],
+  "role": "standalone mythic legendary \u2014 single-of-its-kind, the migration encounter; appears once per season on the flyway",
+  "theme": "the instinct that knows the way home, made into one enormous bird that the whole flock steers by",
+  "silhouette": "one hard wide V of wings, a straight forward-thrust neck and a long streaming tail \u2014 the entire creature reads as a single arrowhead pointing forward",
+  "prompt": "A great long-necked bird frozen mid-lead of a migration: wings held in a hard wide V, neck stretched straight forward, long tail streaming behind, so the whole animal reads as one enormous arrowhead. Its head carries a swept-back crest of antler-like quills, and across the underside of each wing runs a fixed map of small star-marks that its flock navigates by. Its plumage layers into heavy chunky feather-slabs, a faint compass-ring burns at its breast, and a thin trail of tiny distant birds follows in its wake.",
+  "palette": "deep sapphire-blue and dusk-violet plumage with deep teal underwing shadow, warm deep-gold star-marks and breast-ring, near-black outline and flight-feather tips \u2014 rich and nocturnal, no bright sky-blue",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Trenchlure",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "role": "regional variant of the lamp-bearer wick archetype \u2014 deep-ocean-trench form; one of six biome siblings",
+  "theme": "the lamp gets sealed under pressure, so the lure becomes the entire hunt \u2014 the body reduced to a delivery system for one light",
+  "silhouette": "a flattened lozenge with a huge downturned scoop jaw and two stubby paddle-struts, plus one whip-thin stalk arcing far forward past the snout to a bead cluster \u2014 reads as a giant fishhook at 64px",
+  "prompt": "An abyssal predator built like a flattened, armored eel-hound: its four limbs have collapsed into two stubby paddle-struts tucked tight under a long lozenge body, and its lower jaw hangs permanently open in a downturned scoop lined with needle teeth. A single whip-thin stalk arcs forward from its brow far past the snout, ending in a tight cluster of cold pinpoint lights. Its ribcage lamp-chamber is sealed behind thick glassy pressure plates that glow through translucent skin, and its eyes have shrunk to two blind slits.",
+  "palette": "abyss near-black base, deep indigo and bruise-violet skin banding, cold deep-teal lure beads, muted plum organ-glow bleeding through the translucent belly \u2014 the lights read as small cold pinpoints against black",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Forgewick",
+  "types": [
+   "fire",
+   "rock"
+  ],
+  "role": "regional variant of the lamp-bearer wick archetype \u2014 volcanic-waste form; one of six biome siblings",
+  "theme": "the lamp becomes a furnace \u2014 where prey already comes to the heat there is nothing left to lure, so the lure burned away and the chest opened up",
+  "silhouette": "squat and brick-heavy on four stone-plated pillar legs, head hung low in a blunt wedge, chest split by a wide open vent, three short prongs where the stalk used to be \u2014 reads as an anvil on legs",
+  "prompt": "A squat, brick-heavy quadruped standing on four stone-plated pillar legs, its hide a cracked crust of cooled lava split by deep fissures. Its chest lamp-chamber has burst open into a wide forge-vent that breathes heat and drifting sparks, and its luring stalk has burned down to a crown of three short pilot-flame prongs above a low, blunt, wedge-shaped head. Thin smoke curls upward from the vent and from the seams of its plating.",
+  "palette": "charcoal-black crust, deep oxblood and burnt-crimson fissures, a molten deep-amber core held inside the vent, ash-grey smoke \u2014 heat reads as glow trapped inside cracks, never a glare",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Lenswick",
+  "types": [
+   "ice",
+   "steel"
+  ],
+  "role": "regional variant of the lamp-bearer wick archetype \u2014 frozen-tundra form; one of six biome siblings",
+  "theme": "the lamp becomes a lens \u2014 light is too precious to hang out in the open, so it is hoarded behind ice and aimed like a beam",
+  "silhouette": "an enormous rounded shag-hulk whose fur skirt hides the legs entirely, broken by one big flat forward-angled disc set into the chest and two broad snowshoe forepaws \u2014 reads as a boulder with a plate bolted to it",
+  "prompt": "An enormous rounded hulk of heavy shag fur hanging all the way to the ground like a skirt, hiding stubby legs and two broad splayed snowshoe forepaws. Its lamp-chamber has frozen over into a wide, flat, forward-angled dome of glacial ice set into its chest that works as a lens. Its luring stalk has thickened into a short curved horn that feeds a steady focused beam down into that lens, spilling forward across the ground in front of it.",
+  "palette": "deep slate-blue overfur over near-black underfur, deep glacial teal ice dome, cold steel-blue focused beam, frost-grey muzzle \u2014 dark and cinematic, no white-out, no pastel blue",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Snarelight",
+  "types": [
+   "grass",
+   "electric"
+  ],
+  "role": "regional variant of the lamp-bearer wick archetype \u2014 dense-jungle-canopy form; one of six biome siblings",
+  "theme": "the lamp becomes a fishing line dropped from above \u2014 it hangs in the canopy and baits the forest floor",
+  "silhouette": "a hanging pose: one long arm gripping overhead, body dangling, tail coiled tight, and one long thin filament trailing far below to a single bead \u2014 an upside-down Y with a thread hanging off it",
+  "prompt": "A long-armed, narrow-chested canopy hunter hanging one-handed from a branch, its free arm tucked to its ribs and a prehensile tail coiled tight, its body wrapped in blackened forest hide. Its single chest lamp has split into a row of small dim lantern-pods running down its spine that pulse in slow signal patterns. Its luring stalk has stretched into a long thin filament trailing far below the body, ending in one small glowing bead dangled as bait for prey on the forest floor.",
+  "palette": "blackened bottle-green and deep moss hide, umber-brown limbs, muted lantern-gold spine pulses kept dim and warm, one small pale-gold bait bead \u2014 jungle shadow does most of the work, never neon or chartreuse",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Miragewick",
+  "types": [
+   "ground",
+   "fairy"
+  ],
+  "role": "regional variant of the lamp-bearer wick archetype \u2014 salt-flat form; one of six biome siblings",
+  "theme": "the lamp becomes a mirror \u2014 on ground with nowhere to hide, it lures by throwing a false copy of itself",
+  "silhouette": "a tall stilt-walker on four impossibly thin legs, narrow crusted body topped by a broad shallow upturned pan with a fine fan of filaments above it \u2014 reads as a table lamp on stilts",
+  "prompt": "A tall, spindly stilt-walker on four impossibly thin legs, its narrow body encased in flaking overlapping plates of salt crust, standing over its own reflection on cracked hardpan. Its head has flattened into a broad, shallow, upturned pan that catches and bends light. Above the pan its luring stalk has fanned out into a spray of fine glassy filaments that throw a shimmering false double of the creature to confuse prey.",
+  "palette": "deep bone-taupe and dusty sepia salt crust, deep rose-gold and dusk-copper filament shimmer kept muted, deep violet shadow pooled beneath it, dark umber leg joints \u2014 warm dusk jewel tones on dark ground, never bleached or pink-pastel",
+  "method": "Lv 52"
+ },
+ {
+  "name": "Knellwick",
+  "types": [
+   "rock",
+   "ghost"
+  ],
+  "role": "regional variant of the lamp-bearer wick archetype \u2014 cave-system form; one of six biome siblings",
+  "theme": "the lamp goes dark and becomes a bell \u2014 where every hunter and every prey is blind, sound replaces light entirely",
+  "silhouette": "hunched and eyeless with the ribcage grown downward into a huge inverted bell slung between the legs, and a bare stalk arcing backward over the spine \u2014 a crouched shape with a heavy weight hung under it, the only sibling whose stalk points the wrong way",
+  "prompt": "A hunched, completely eyeless quadruped whose ribcage has grown downward into a huge inverted bell of banded stone, hanging low between its legs and nearly scraping the ground with a heavy bone clapper swinging inside. Its lamp has gone dark and hollow \u2014 the chamber is a resonating bell now \u2014 and its luring stalk has hardened into a bare antenna that arcs backward over its spine to read returning echoes. Only a dim ember pilot-light is left burning deep in its open throat.",
+  "palette": "deep basalt grey-black hide, deep plum-violet mineral banding across the bell, a cold bone-pale rim on the bell mouth, a single dim ember-red throat glow \u2014 almost monochrome dark with one violet and one red note, the most sunless of the six",
+  "method": "Lv 52"
+ }
+]

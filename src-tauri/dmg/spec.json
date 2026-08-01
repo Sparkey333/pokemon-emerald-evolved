@@ -1,0 +1,11 @@
+{
+  "title": "Pokemon Emerald Evolved",
+  "icon": "../icons/icon.icns",
+  "background": "background.png",
+  "icon-size": 128,
+  "window": { "size": { "width": 660, "height": 400 } },
+  "contents": [
+    { "x": 180, "y": 190, "type": "file", "path": "/Users/ansom/Projects/pokemon-emerald-evolved/src-tauri/target/release/bundle/macos/Pokemon Emerald Evolved.app" },
+    { "x": 480, "y": 190, "type": "link", "path": "/Applications" }
+  ]
+}

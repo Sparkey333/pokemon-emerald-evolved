@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Indigo Dexforge — Dashboard</title>
+<style>
+  :root{
+    --bg:#080b14; --panel:#111829; --panel2:#0c1220; --line:#243149;
+    --text:#e8edf8; --muted:#8b9bc0; --dim:#5a6a8a;
+    --indigo:#6366f1; --gold:#d9a441; --sapphire:#2f9fd0;
+    --amethyst:#8b6fd4; --emerald:#2fa87c; --garnet:#c25563;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Segoe UI",system-ui,sans-serif;background:
+    radial-gradient(1100px 620px at 78% -12%,#1b1740 0,var(--bg) 58%);
+    color:var(--text);min-height:100vh;line-height:1.55}
+  header{display:flex;align-items:center;gap:16px;padding:16px 26px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font-size:1.15rem;letter-spacing:.04em;font-weight:800}
+  header h1 span{color:var(--indigo)}
+  .tag{font-size:.68rem;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+  .tag b{color:var(--emerald)}
+  header .sub{width:100%;font-size:.76rem;color:var(--dim)}
+  nav{display:flex;gap:8px;padding:14px 26px 0;flex-wrap:wrap;align-items:center}
+  nav button{background:var(--panel);border:1px solid var(--line);color:var(--muted);
+    padding:8px 15px;border-radius:9px;cursor:pointer;font-size:.83rem;font-weight:600}
+  nav button.on{background:var(--indigo);border-color:var(--indigo);color:#fff}
+  main{padding:18px 26px 70px;max-width:1500px;margin:0 auto}
+  h2.sec{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:26px 0 12px}
+  h2.sec:first-child{margin-top:4px}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+  .stat{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:13px;padding:15px 17px;position:relative;overflow:hidden}
+  .stat::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--indigo))}
+  .stat .k{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+  .stat .v{font-size:1.85rem;font-weight:800;line-height:1.25;color:var(--c,var(--text))}
+  .stat .d{font-size:.72rem;color:var(--muted)}
+  .bar{height:6px;background:#0a0f1c;border-radius:99px;margin-top:9px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--c,var(--indigo));border-radius:99px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:11px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:11px 7px;
+    text-align:center;cursor:pointer;transition:transform .12s,border-color .12s}
+  .card:hover{transform:translateY(-3px);border-color:var(--c,var(--indigo))}
+  .card img{width:88px;height:88px;image-rendering:pixelated}
+  .card .ph{width:88px;height:88px;display:inline-flex;align-items:center;justify-content:center;
+    color:var(--dim);font-size:1.7rem;border:1px dashed var(--line);border-radius:8px}
+  .card .no{font-size:.66rem;color:var(--dim)}
+  .card .nm{font-size:.79rem;font-weight:700}
+  .card .ty{font-size:.61rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+  .card.sel{border-color:var(--emerald);box-shadow:0 0 0 1px var(--emerald)}
+
+  .note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c,var(--indigo));
+    border-radius:11px;padding:13px 17px;font-size:.81rem;color:var(--muted);margin:0 0 16px}
+  .note b.g{color:var(--emerald)} .note b.r{color:var(--garnet)} .note code{color:var(--sapphire)}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+  .col{flex:1;min-width:320px}
+
+  label{display:block;font-size:.71rem;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--dim);margin:13px 0 5px}
+  input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);
+    border-radius:9px;padding:9px 11px;font-size:.85rem;font-family:inherit}
+  textarea{min-height:88px;resize:vertical;line-height:1.5}
+  .btn{background:linear-gradient(135deg,var(--indigo),#8b5cf6);color:#fff;border:none;padding:11px 19px;
+    border-radius:9px;cursor:pointer;font-size:.87rem;font-weight:700;margin-top:16px}
+  .btn.sec{background:var(--panel);border:1px solid var(--line);color:var(--muted);font-weight:600}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+  .chip{background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:5px 11px;
+    font-size:.71rem;cursor:pointer;color:var(--muted)}
+  .chip:hover,.chip.on{border-color:var(--emerald);color:var(--emerald)}
+
+  .jobs{font-family:ui-monospace,Menlo,monospace;font-size:.73rem;background:#060910;
+    border:1px solid var(--line);border-radius:11px;padding:12px 14px;max-height:340px;overflow:auto}
+  .jobs .j{margin-bottom:11px;padding-bottom:9px;border-bottom:1px solid #16203a}
+  .jobs .j:last-child{border:0}
+  .jobs .st{font-weight:700}
+  .st.running{color:var(--gold)} .st.done{color:var(--emerald)} .st.failed{color:var(--garnet)}
+  .jobs pre{color:var(--dim);white-space:pre-wrap;margin-top:5px;max-height:150px;overflow:auto}
+
+  table{width:100%;border-collapse:collapse;font-size:.8rem;background:var(--panel);
+    border-radius:11px;overflow:hidden}
+  th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}
+  th{background:var(--panel2);color:var(--muted);font-size:.71rem;letter-spacing:.09em;text-transform:uppercase}
+  td code{color:var(--sapphire)}
+
+  .modal{position:fixed;inset:0;background:rgba(3,5,11,.9);display:none;align-items:flex-start;
+    justify-content:center;overflow:auto;padding:28px 16px;z-index:60}
+  .modal.on{display:flex}
+  .modal-inner{max-width:840px;width:100%}
+  .modal-bar{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+  .modal-bar h3{font-size:1.05rem;margin-right:auto}
+  .modal-bar button{background:var(--panel);border:1px solid var(--line);color:var(--muted);
+    padding:7px 13px;border-radius:8px;cursor:pointer;font-size:.79rem}
+  .modal-bar button.on{color:var(--text);border-color:var(--indigo);background:#1a2140}
+  .modal img{width:100%;border-radius:12px;border:1px solid var(--line);background:var(--panel2)}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--panel);
+    border:1px solid var(--line);border-left:3px solid var(--emerald);color:var(--text);
+    padding:12px 20px;border-radius:10px;font-size:.84rem;z-index:80;display:none;max-width:80vw}
+  .toast.err{border-left-color:var(--garnet)}
+  .toast.on{display:block}
+</style>
+</head>
+<body>
+<header>
+  <h1>◆ <span>INDIGO</span> DEXFORGE</h1>
+  <span class="tag" id="hdr-count">…</span>
+  <span class="tag" id="hdr-server">server: <b>checking…</b></span>
+  <div class="sub">Pokémon Evolved ROM-hack forge — vault, character &amp; action sheets, montage mapper, and a live prompt→species forge.</div>
+</header>
+
+<nav id="nav">
+  <button data-tab="overview" class="on">Overview</button>
+  <button data-tab="species">Species</button>
+  <button data-tab="anim">Animations</button>
+  <button data-tab="mapper">Montage Mapper</button>
+  <button data-tab="forge">Forge</button>
+  <button data-tab="vault">Vault &amp; Rules</button>
+</nav>
+<main id="main"></main>
+
+<div class="modal" id="modal">
+  <div class="modal-inner">
+    <div class="modal-bar">
+      <h3 id="m-title"></h3>
+      <button id="m-char" class="on">Character sheet</button>
+      <button id="m-act">Action sheet</button>
+      <button id="m-close">✕ close</button>
+    </div>
+    <img id="m-img" alt="sheet" />
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="data/species.js"></script>
+<script src="data/reveal-art.js"></script>
+<script src="data/montage.js"></script>
+<script src="data/forge-presets.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const SECTIONS = [
+  { key:'kanto',   label:'Kanto 151',       colour:'var(--gold)',     ship:false },
+  { key:'evolved', label:'Pokémon Evolved', colour:'var(--sapphire)', ship:false },
+  { key:'diy',     label:'DIY Originals',   colour:'var(--amethyst)', ship:true  },
+  { key:'forge',   label:'Forged',          colour:'var(--emerald)',  ship:true  },
+];
+const COLOUR = Object.fromEntries(SECTIONS.map(s => [s.key, s.colour]));
+let tab = 'overview', live = false, pollTimer = null;
+
+const list  = (k) => (window.DEX && DEX[k]) || [];
+const all   = () => SECTIONS.flatMap(s => list(s.key));
+const hasArt = (e) => !!(e.sprites && e.sprites.front);
+const dirOf = (e) => e.dex
+  ? `sheets/${e.section}/${String(e.dex).padStart(3,'0')}-${e.slug}`
+  : `sheets/${e.section}/${e.slug}`;
+
+function toast(msg, err) {
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast on' + (err ? ' err' : '');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => (t.className = 'toast'), 4200);
+}
+
+// ── Overview ────────────────────────────────────────────────────────────
+function overview() {
+  const total = all().length, withArt = all().filter(hasArt).length;
+  const cards = SECTIONS.map(s => {
+    const l = list(s.key), a = l.filter(hasArt).length;
+    const pct = l.length ? Math.round(a / l.length * 100) : 0;
+    return `<div class="stat" style="--c:${s.colour}">
+      <div class="k">${s.label}</div><div class="v">${l.length}</div>
+      <div class="d">${a} with art · ${pct}% covered</div>
+      <div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  }).join('');
+  const montage = (window.MONTAGE && MONTAGE.cells) ? MONTAGE.cells.length : 0;
+  const mapped = list('evolved').filter(e => e.montageCell).length;
+  return `<h2 class="sec">Coverage</h2>
+    <div class="stats">${cards}
+      <div class="stat" style="--c:var(--indigo)"><div class="k">All species</div>
+        <div class="v">${total}</div><div class="d">${withArt} with art · ${total*2} sheets</div>
+        <div class="bar"><i style="width:${Math.round(withArt/total*100)}%"></i></div></div>
+      <div class="stat" style="--c:var(--sapphire)"><div class="k">Montage art</div>
+        <div class="v">${montage}</div>
+        <div class="d">${mapped} assigned to species · ${montage-mapped} unmapped</div>
+        <div class="bar"><i style="width:${montage?Math.round(mapped/montage*100):0}%"></i></div></div>
+    </div>
+    <h2 class="sec">What each source gives you</h2>
+    ${sourcesTable()}
+    <h2 class="sec">Recently forged</h2>
+    ${list('forge').length
+      ? `<div class="grid">${list('forge').map((e,i)=>cardHtml(e,i,'forge')).join('')}</div>`
+      : `<div class="note" style="--c:var(--emerald)">Nothing forged yet — open the
+         <b class="g">Forge</b> tab and describe a new evolution or species. It generates art,
+         builds its sheets, and lands here.</div>`}`;
+}
+
+function sourcesTable() {
+  const m = (window.MONTAGE && MONTAGE.cells) ? MONTAGE.cells.length : 0;
+  const r = (window.REVEAL_ART || []).length;
+  return `<table>
+    <tr><th>Source</th><th>What it covers</th><th>Status</th></tr>
+    <tr><td><code>vault/kanto-151</code></td><td>151 species × front/back/shiny/shiny-back (FRLG) + full stats</td><td>complete</td></tr>
+    <tr><td><code>data/evolved-stats.csv</code></td><td>All 203 new species: names, types, abilities, stats, evo levels</td><td>complete</td></tr>
+    <tr><td><code>vault/evolved/montage</code></td><td>${m} real hack creature designs sliced from calicorn's sheet</td><td>needs manual mapping</td></tr>
+    <tr><td><code>vault/evolved/reveal-art</code></td><td>${r} artist reveal images (Bluesky + Tumblr)</td><td>reference gallery</td></tr>
+    <tr><td><code>vault/diy</code> + <code>vault/forge</code></td><td>Your originals — BYOK generated, shippable</td><td>live</td></tr>
+  </table>`;
+}
+
+// ── Species browser ─────────────────────────────────────────────────────
+let spQuery = '', spSection = 'all', spArtOnly = false;
+
+function cardHtml(e, i, section) {
+  const img = hasArt(e)
+    ? `<img loading="lazy" src="${e.sprites.front}" alt="${e.name}">`
+    : `<div class="ph">?</div>`;
+  return `<div class="card" data-i="${i}" data-sec="${section}" style="--c:${COLOUR[e.section]}">
+    ${img}<div class="no">${e.dex ? '#'+String(e.dex).padStart(3,'0') : (e.method||'')}</div>
+    <div class="nm">${e.name}</div><div class="ty">${(e.types||[]).join(' · ')}</div></div>`;
+}
+
+function speciesFiltered() {
+  let l = spSection === 'all' ? all() : list(spSection);
+  if (spArtOnly) l = l.filter(hasArt);
+  const q = spQuery.trim().toLowerCase();
+  if (q) l = l.filter(e => e.name.toLowerCase().includes(q)
+    || (e.types||[]).some(t => t.includes(q))
+    || String(e.dex||'').includes(q));
+  return l;
+}
+
+function speciesTab() {
+  const l = speciesFiltered();
+  const opts = ['all', ...SECTIONS.map(s => s.key)]
+    .map(k => `<option value="${k}" ${k===spSection?'selected':''}>${
+      k==='all' ? `All (${all().length})`
+        : `${SECTIONS.find(s=>s.key===k).label} (${list(k).length})`}</option>`).join('');
+  return `<div class="row" style="align-items:center;gap:11px">
+      <div style="flex:2;min-width:230px"><label>Search</label>
+        <input id="sp-q" placeholder="name, type, dex #…" value="${spQuery}"></div>
+      <div style="flex:1;min-width:170px"><label>Section</label><select id="sp-sec">${opts}</select></div>
+      <div style="flex:0"><label>&nbsp;</label>
+        <button class="btn sec" id="sp-art" style="margin:0">${spArtOnly?'✓ ':''}With art only</button></div>
+    </div>
+    <h2 class="sec">${l.length} species — click for character &amp; action sheets</h2>
+    <div class="grid" id="sp-grid">${l.map((e,i)=>cardHtml(e,i,'filtered')).join('')}</div>`;
+}
+
+// ── Animations ──────────────────────────────────────────────────────────
+// Plays the same frames the action sheets bake, but live on canvas: the sheet
+// PNGs are stills, so the app composes each frame from the 64px vault sprites.
+let animState = { slug: null, clip: 'idle', fps: 6, scale: 5, shiny: false, playing: true };
+let animRAF = null, animImgs = null, animFrame = 0, animLast = 0;
+
+const CLIPS = ['rotate', 'idle', 'attack', 'hit', 'faint'];
+
+function animCandidates() {
+  return all().filter(hasArt);
+}
+
+function animTab() {
+  const list = animCandidates();
+  if (!list.length) return `<div class="note">No sprites with art yet.</div>`;
+  if (!animState.slug || !list.some(e => e.slug === animState.slug)) {
+    animState.slug = (list.find(e => e.section === 'forge') || list.find(e => e.section === 'diy') || list[0]).slug;
+  }
+  const cur = list.find(e => e.slug === animState.slug);
+  const opts = list.map(e => `<option value="${e.slug}"${e.slug === animState.slug ? ' selected' : ''}>${
+    e.dex ? '#' + String(e.dex).padStart(3, '0') + ' ' : ''}${e.name}</option>`).join('');
+  return `<div class="row" style="gap:14px">
+      <div style="flex:1;min-width:230px"><label>Subject</label><select id="an-who">${opts}</select></div>
+      <div style="flex:0 0 auto"><label>Frame rate — <b id="an-fpsv">${animState.fps}</b> fps</label>
+        <input type="range" id="an-fps" min="1" max="24" value="${animState.fps}" style="width:180px"></div>
+      <div style="flex:0 0 auto"><label>Scale — <b id="an-scv">${animState.scale}</b>×</label>
+        <input type="range" id="an-scale" min="2" max="10" value="${animState.scale}" style="width:150px"></div>
+      <div style="flex:0 0 auto"><label>&nbsp;</label>
+        <button class="btn sec" id="an-shiny" style="margin:0">${animState.shiny ? '✓ ' : ''}Shiny</button></div>
+      <div style="flex:0 0 auto"><label>&nbsp;</label>
+        <button class="btn sec" id="an-play" style="margin:0">${animState.playing ? '❚❚ Pause' : '▶ Play'}</button></div>
+    </div>
+    <h2 class="sec">${cur.name} — ${animState.clip}</h2>
+    <div class="chips" style="margin-bottom:14px">${CLIPS.map(c =>
+      `<span class="chip${animState.clip === c ? ' on' : ''}" data-clip="${c}">${c}</span>`).join('')}</div>
+    <div style="display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start">
+      <div style="background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:20px">
+        <canvas id="an-stage" width="512" height="512"
+                style="image-rendering:pixelated;display:block"></canvas>
+      </div>
+      <div style="flex:1;min-width:250px">
+        <div class="note" style="--c:${COLOUR[cur.section]};margin:0">
+          <b>${cur.name}</b> · ${(cur.types || []).join(' · ')}<br>
+          ${cur.theme || cur.method || ''}<br><br>
+          Frames are composed live from the 64px vault sprites — the same squash, shade, tint
+          and fade the action sheets bake as stills. <b>Rotate</b> uses the real back sprite
+          when one exists, otherwise a mirrored approximation.
+        </div>
+        <div class="note" style="margin-top:12px">Strip — every frame of this clip
+          <div id="an-strip" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"></div></div>
+      </div>
+    </div>`;
+}
+
+function loadImg(src) {
+  return new Promise((res) => {
+    const i = new Image();
+    i.onload = () => res(i);
+    i.onerror = () => res(null);
+    i.src = src;
+  });
+}
+
+// Draw one 64x64 sprite through a per-frame transform onto a 64x64 scratch canvas.
+function composeFrame(base, back, clip, idx) {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const x = c.getContext('2d');
+  x.imageSmoothingEnabled = false;
+
+  const put = (img, { sx = 1, sy = 1, dx = 0, dy = 0, alpha = 1, mirror = false } = {}) => {
+    if (!img) return;
+    x.save();
+    x.globalAlpha = alpha;
+    x.translate(32 + dx, 64 + dy);
+    x.scale(sx * (mirror ? -1 : 1), sy);
+    x.drawImage(img, -32, -64, 64, 64);
+    x.restore();
+  };
+  const overlay = (colour, a) => {
+    x.save();
+    x.globalCompositeOperation = 'source-atop';
+    x.globalAlpha = a;
+    x.fillStyle = colour;
+    x.fillRect(0, 0, 64, 64);
+    x.restore();
+  };
+
+  if (clip === 'rotate') {
+    if (idx === 0) put(base);
+    else if (idx === 1) { put(base, { sx: 0.45 }); overlay('#000', 0.15); }
+    else if (idx === 2) { put(back || base, { mirror: !back }); if (!back) overlay('#000', 0.3); }
+    else { put(back || base, { sx: 0.45, mirror: true }); overlay('#000', 0.2); }
+  } else if (clip === 'idle') {
+    if (idx === 1) put(base, { sy: 0.97 });
+    else if (idx === 3) put(base, { dy: -1 });
+    else put(base);
+  } else if (clip === 'attack') {
+    if (idx === 0) put(base, { dx: -3 });
+    else if (idx === 1) put(base, { dx: 6, dy: -1 });
+    else if (idx === 2) { put(base, { dx: 12, dy: -2 }); overlay('#fff', 0.55); }
+    else put(base, { dx: 4 });
+  } else if (clip === 'hit') {
+    if (idx === 0) { put(base); overlay('#ef4444', 0.4); }
+    else if (idx === 1) put(base, { dx: -7, alpha: 0.45 });
+    else if (idx === 2) { put(base, { dx: -3 }); overlay('#ef4444', 0.2); }
+    else put(base);
+  } else { // faint
+    if (idx === 0) put(base);
+    else if (idx === 1) put(base, { sy: 0.7, alpha: 0.85 });
+    else if (idx === 2) put(base, { sy: 0.45, alpha: 0.55 });
+    else put(base, { sy: 0.22, alpha: 0.25 });
+  }
+  return c;
+}
+
+function stopAnim() {
+  if (animRAF) clearInterval(animRAF);
+  animRAF = null;
+  animImgs = null;
+}
+
+async function wireAnim() {
+  const e = all().find(x => x.slug === animState.slug);
+  if (!e) return;
+  const sp = e.sprites || {};
+  const frontSrc = animState.shiny ? (sp.shiny || sp.front) : sp.front;
+  const backSrc = animState.shiny ? (sp['back-shiny'] || sp.back) : sp.back;
+  const [base, back] = await Promise.all([loadImg(frontSrc), backSrc ? loadImg(backSrc) : null]);
+  animImgs = { base, back };
+  animFrame = 0;
+  animLast = 0;
+
+  const frames = [0, 1, 2, 3].map(i => composeFrame(base, back, animState.clip, i));
+  const strip = $('#an-strip');
+  if (strip) {
+    strip.innerHTML = '';
+    frames.forEach((f, i) => {
+      const w = document.createElement('div');
+      w.style.cssText = 'text-align:center;color:var(--dim);font-size:.6rem';
+      const c = document.createElement('canvas');
+      c.width = c.height = 64;
+      c.style.cssText = 'width:56px;height:56px;image-rendering:pixelated;background:var(--panel2);border:1px solid var(--line);border-radius:7px';
+      c.getContext('2d').drawImage(f, 0, 0);
+      w.appendChild(c);
+      w.appendChild(Object.assign(document.createElement('div'), { textContent: 'F' + (i + 1) }));
+      strip.appendChild(w);
+    });
+  }
+
+  // A sprite flipbook runs at a fixed low fps, so setInterval is the right primitive —
+  // and unlike rAF it keeps ticking when the window is backgrounded or throttled.
+  const stage = $('#an-stage');
+  const ctx = stage.getContext('2d');
+  const paint = () => {
+    const s = animState.scale * 64;
+    if (stage.width !== s) stage.width = stage.height = s;
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, s, s);
+    ctx.drawImage(frames[animFrame], 0, 0, s, s);
+  };
+  const start = () => {
+    clearInterval(animRAF);
+    animRAF = setInterval(() => {
+      if (!animState.playing) return;
+      animFrame = (animFrame + 1) % 4;
+      paint();
+    }, Math.max(20, 1000 / animState.fps));
+  };
+  paint();
+  start();
+  animState._restart = start;
+
+  $('#an-who').onchange = (ev) => { animState.slug = ev.target.value; render(); };
+  $('#an-fps').oninput = (ev) => {
+    animState.fps = +ev.target.value;
+    $('#an-fpsv').textContent = animState.fps;
+    if (animState._restart) animState._restart();   // retime without rebuilding frames
+  };
+  $('#an-scale').oninput = (ev) => { animState.scale = +ev.target.value; $('#an-scv').textContent = animState.scale; };
+  $('#an-shiny').onclick = () => { animState.shiny = !animState.shiny; render(); };
+  $('#an-play').onclick = () => { animState.playing = !animState.playing; render(); };
+  document.querySelectorAll('.chip[data-clip]').forEach(el =>
+    el.onclick = () => { animState.clip = el.dataset.clip; render(); });
+}
+
+// ── Montage mapper ──────────────────────────────────────────────────────
+let selCell = null, mapQuery = '';
+
+function mapperTab() {
+  const cells = (window.MONTAGE && MONTAGE.cells) || [];
+  if (!cells.length) {
+    return `<div class="note" style="--c:var(--garnet)">No montage slices yet — run
+      <code>python3 tools/slice_montage.py</code>.</div>`;
+  }
+  const usedBy = {};
+  list('evolved').forEach(e => { if (e.montageCell) usedBy[e.montageCell] = e.name; });
+  const q = mapQuery.trim().toLowerCase();
+  const targets = list('evolved')
+    .filter(e => !q || e.name.toLowerCase().includes(q))
+    .slice(0, 60);
+  return `<div class="note" style="--c:var(--sapphire)">
+      <b>Why this is manual:</b> calicorn's montage has a dex number on every cell, but at the only
+      resolution that still exists (<code>s640x960</code> — larger sizes 404) that text is about
+      3px tall and unreadable, so no automatic mapping is honest. Pick a creature below, pick the
+      species it belongs to, and its sheets rebuild with the real art.
+      ${live ? '' : '<br><b class="r">Read-only:</b> start the forge server to save assignments.'}
+    </div>
+    <h2 class="sec">1 · Pick a creature (${cells.length} sliced${
+      Object.keys(usedBy).length ? `, ${Object.keys(usedBy).length} assigned` : ''})</h2>
+    <div class="grid">${cells.map(c => `
+      <div class="card${selCell===c.key?' sel':''}" data-cell="${c.key}" style="--c:var(--sapphire)">
+        <img loading="lazy" src="${c.normal}" alt="${c.key}">
+        <div class="nm">${c.key.replace('cell-','#')}</div>
+        <div class="ty" style="color:${usedBy[c.key]?'var(--emerald)':'var(--dim)'}">
+          ${usedBy[c.key] || 'unassigned'}</div></div>`).join('')}</div>
+    <h2 class="sec">2 · Assign ${selCell ? selCell.replace('cell-','cell #') : '— pick a creature first'}</h2>
+    <div class="row"><div class="col">
+      <label>Filter species</label>
+      <input id="map-q" placeholder="Ecosaur, Chariguana…" value="${mapQuery}">
+      <div class="chips" style="margin-top:11px">${targets.map(e => `
+        <span class="chip" data-slug="${e.slug}">${e.name}${e.montageCell?' ✓':''}</span>`).join('')}</div>
+    </div></div>`;
+}
+
+// ── Forge ───────────────────────────────────────────────────────────────
+function forgeTab() {
+  const presets = window.FORGE_PRESETS || [];
+  const parents = all().map(e => e.name).sort();
+  return `<div class="note" style="--c:var(--emerald)">
+      Describe a new evolution or an entirely new species. It generates a front and back sprite
+      (BYOK Nano Banana, ~$0.08 each), hue-shifts a shiny, builds its character + action sheets,
+      and adds it to the dex as a <b class="g">shippable original</b>.
+      ${live ? '' : '<br><b class="r">Server offline</b> — run <code>node tools/forge-server.mjs</code> and reload to forge.'}
+    </div>
+    ${presets.length ? `<h2 class="sec">Start from a concept (${presets.length})</h2>
+      <div class="chips">${presets.map((p,i)=>`<span class="chip" data-preset="${i}">${p.name}
+        <span style="color:var(--dim)"> · ${(p.types||[]).join('/')}</span></span>`).join('')}</div>` : ''}
+    <div class="row">
+      <div class="col">
+        <label>Name <span style="color:var(--dim);text-transform:none;letter-spacing:0">— direct &amp; characterful, never a colour/gem name</span></label>
+        <input id="f-name" placeholder="Swarmwyrm">
+        <label>Types (comma separated)</label>
+        <input id="f-types" placeholder="dragon, bug">
+        <label>Evolves from</label>
+        <input id="f-from" list="f-parents" placeholder="none — new line">
+        <datalist id="f-parents">${parents.map(n=>`<option value="${n}">`).join('')}</datalist>
+        <label>Evolution method</label>
+        <input id="f-method" placeholder="Lv 52 · Leaf Stone · none">
+      </div>
+      <div class="col">
+        <label>Design theme (one line)</label>
+        <input id="f-theme" placeholder="a dragon assembled out of a locust swarm">
+        <label>Art prompt — describe it vividly; style boilerplate is added for you</label>
+        <textarea id="f-prompt" placeholder="Long serpentine body made of countless interlocking insects, wings that blur into a cloud of wings…"></textarea>
+        <label>Palette (optional)</label>
+        <input id="f-palette" placeholder="deep bronze, moss green, storm violet">
+        <button class="btn" id="f-go" ${live?'':'disabled'}>⚒ Forge species</button>
+        <button class="btn sec" id="f-rebuild" ${live?'':'disabled'}>Rebuild all sheets</button>
+      </div>
+    </div>
+    <h2 class="sec">Jobs</h2><div class="jobs" id="jobs">${live?'no jobs yet':'server offline'}</div>`;
+}
+
+// ── Vault ───────────────────────────────────────────────────────────────
+function vaultTab() {
+  return `<div class="note" style="--c:var(--garnet)">
+      <b class="r">Standing guardrail.</b> <code>vault/kanto-151</code> (Nintendo / Game Freak, via
+      PokeAPI), <code>vault/evolved/montage</code> and <code>vault/evolved/reveal-art</code>
+      (Pokémon Evolved fan art) are a <b>local personal reference vault only</b> — never bundled,
+      re-hosted, sold, or shipped. No ROMs or patches are stored or linked here; play the hack by
+      patching <i>your own</i> LeafGreen dump.<br><br>
+      <b class="g">Shippable:</b> only <code>vault/diy</code> and <code>vault/forge</code> —
+      your own originals.</div>
+    <h2 class="sec">Credits</h2>
+    <table>
+      <tr><th>Who</th><th>What</th></tr>
+      <tr><td>AtSign8877</td><td>Pokémon Evolved ROM hack (LeafGreen, 151→354), commissioned by PointCrow</td></tr>
+      <tr><td>calicorn</td><td>Lead spriter — the montage every mapped Evolved sprite comes from</td></tr>
+      <tr><td>kattenkg · jordanosart · xiapher</td><td>New-species sprite art (reveal gallery)</td></tr>
+      <tr><td>JuicyBlucy · PotatoLeon</td><td>Community data docs — the 203-species stats and evolution tables</td></tr>
+      <tr><td>PokeAPI</td><td>FRLG sprites and Gen-1 species data</td></tr>
+    </table>
+    <h2 class="sec">Artist reveal gallery</h2>
+    <div class="grid">${(window.REVEAL_ART||[]).map(r=>`
+      <a class="card" href="${r.source}" target="_blank" style="--c:var(--sapphire);text-decoration:none;color:inherit"
+         title="${(r.text||'').replace(/"/g,'&quot;')}">
+        <img loading="lazy" src="${r.file}" style="width:100%;height:104px;object-fit:contain;image-rendering:auto">
+        <div class="no">${(r.date||'').slice(0,10)}</div><div class="nm">${r.artist}</div></a>`).join('')}</div>`;
+}
+
+// ── render + events ─────────────────────────────────────────────────────
+function render() {
+  $('#hdr-count').textContent = SECTIONS.map(s=>`${list(s.key).length} ${s.key}`).join(' · ');
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab===tab));
+  const m = $('#main');
+  stopAnim();
+  m.innerHTML = { overview, species: speciesTab, anim: animTab, mapper: mapperTab,
+                  forge: forgeTab, vault: vaultTab }[tab]();
+  if (tab === 'anim') wireAnim();
+
+  if (tab === 'species') {
+    const l = speciesFiltered();
+    m.querySelectorAll('.card[data-i]').forEach(el =>
+      el.onclick = () => openModal(l[+el.dataset.i]));
+    $('#sp-q').oninput = (e) => { spQuery = e.target.value; const p=e.target.selectionStart;
+      render(); const n=$('#sp-q'); n.focus(); n.setSelectionRange(p,p); };
+    $('#sp-sec').onchange = (e) => { spSection = e.target.value; render(); };
+    $('#sp-art').onclick = () => { spArtOnly = !spArtOnly; render(); };
+  }
+  if (tab === 'overview') {
+    const l = list('forge');
+    m.querySelectorAll('.card[data-i]').forEach(el => el.onclick = () => openModal(l[+el.dataset.i]));
+  }
+  if (tab === 'mapper') {
+    m.querySelectorAll('.card[data-cell]').forEach(el =>
+      el.onclick = () => { selCell = el.dataset.cell; render(); });
+    const q = $('#map-q');
+    if (q) q.oninput = (e) => { mapQuery = e.target.value; const p=e.target.selectionStart;
+      render(); const n=$('#map-q'); if(n){n.focus();n.setSelectionRange(p,p);} };
+    m.querySelectorAll('.chip[data-slug]').forEach(el => el.onclick = () => assign(el.dataset.slug));
+  }
+  if (tab === 'forge') {
+    m.querySelectorAll('.chip[data-preset]').forEach(el => el.onclick = () => {
+      const p = FORGE_PRESETS[+el.dataset.preset];
+      $('#f-name').value = p.name; $('#f-types').value = (p.types||[]).join(', ');
+      $('#f-theme').value = p.theme || ''; $('#f-prompt').value = p.prompt || '';
+      $('#f-palette').value = p.palette || '';
+      $('#f-from').value = p.evolvesFromName || ''; $('#f-method').value = p.method || '';
+    });
+    const go = $('#f-go'); if (go) go.onclick = doForge;
+    const rb = $('#f-rebuild'); if (rb) rb.onclick = () => post('/api/rebuild', {})
+      .then(() => { toast('Rebuilding all sheets…'); pollJobs(); });
+    if (live) pollJobs();
+  }
+}
+
+async function post(path, payload) {
+  const r = await fetch(path, { method:'POST', headers:{'Content-Type':'application/json'},
+                                body: JSON.stringify(payload) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+  return j;
+}
+
+async function assign(slug) {
+  if (!selCell) return toast('Pick a creature cell first', true);
+  if (!live) return toast('Start the forge server to save assignments', true);
+  try {
+    await post('/api/map', { cell: selCell, slug });
+    toast(`${selCell.replace('cell-','#')} → ${slug} — rebuilding its sheets…`);
+    pollJobs(true);
+  } catch (e) { toast(e.message, true); }
+}
+
+async function doForge() {
+  const name = $('#f-name').value.trim();
+  if (!name) return toast('Give it a name', true);
+  const payload = {
+    name,
+    types: $('#f-types').value.split(',').map(s=>s.trim()).filter(Boolean),
+    evolvesFromName: $('#f-from').value.trim() || null,
+    method: $('#f-method').value.trim(),
+    theme: $('#f-theme').value.trim(),
+    prompt: $('#f-prompt').value.trim(),
+    palette: $('#f-palette').value.trim(),
+  };
+  $('#f-go').disabled = true;
+  try {
+    await post('/api/forge', payload);
+    toast(`Forging ${name} — generating art, then sheets…`);
+    pollJobs(true);
+  } catch (e) { toast(e.message, true); }
+  $('#f-go').disabled = false;
+}
+
+async function pollJobs(reloadWhenDone) {
+  clearTimeout(pollTimer);
+  let jobs = [];
+  try { jobs = await (await fetch('/api/jobs')).json(); } catch { return; }
+  const box = $('#jobs');
+  if (box) {
+    box.innerHTML = jobs.length ? jobs.map(j => `<div class="j">
+      <span class="st ${j.status}">${j.status.toUpperCase()}</span>
+      <b>${j.kind}</b> ${j.label}
+      <pre>${(j.log||[]).slice(-14).join('\n').replace(/</g,'&lt;')}</pre></div>`).join('')
+      : 'no jobs yet';
+  }
+  const running = jobs.some(j => j.status === 'running');
+  if (running) pollTimer = setTimeout(() => pollJobs(reloadWhenDone), 1800);
+  else if (reloadWhenDone && jobs.length) {
+    const j = jobs[0];
+    toast(j.status === 'done' ? `${j.label} complete — reloading…` : `${j.label} failed`, j.status!=='done');
+    if (j.status === 'done') setTimeout(() => location.reload(), 1300);
+  }
+}
+
+let modalEntry = null, modalMode = 'character';
+function openModal(e) {
+  if (!e) return;
+  modalEntry = e; modalMode = 'character';
+  $('#m-title').textContent = (e.dex ? '#'+String(e.dex).padStart(3,'0')+' ' : '') + e.name;
+  syncModal(); $('#modal').classList.add('on');
+}
+function syncModal() {
+  $('#m-char').classList.toggle('on', modalMode==='character');
+  $('#m-act').classList.toggle('on', modalMode==='action');
+  $('#m-img').src = `${dirOf(modalEntry)}/${modalMode}.png`;
+}
+$('#m-char').onclick = () => { modalMode='character'; syncModal(); };
+$('#m-act').onclick  = () => { modalMode='action';    syncModal(); };
+$('#m-close').onclick = () => $('#modal').classList.remove('on');
+$('#modal').onclick = (e) => { if (e.target.id === 'modal') $('#modal').classList.remove('on'); };
+document.addEventListener('keydown', e => { if (e.key==='Escape') $('#modal').classList.remove('on'); });
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => { tab = b.dataset.tab; render(); });
+
+fetch('/api/jobs').then(r => { live = r.ok; })
+  .catch(() => { live = false; })
+  .finally(() => {
+    $('#hdr-server').innerHTML = live
+      ? 'server: <b>live — forge enabled</b>'
+      : 'server: <b style="color:var(--garnet)">offline — read only</b>';
+    render();
+  });
+</script>
+</body>
+</html>
