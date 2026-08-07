@@ -1,4 +1,39 @@
-# Pokémon Emerald: Evolved Starters
+# Pokémon Evolved
+
+Two engines and one shared species dataset, in one repository:
+
+| Track | What it is | State |
+|-------|-----------|-------|
+| **Gen 1 — Red / Blue / Yellow** | [gen1recomp](https://github.com/bryanthaboi/gen1recomp), a native LÖVE2D recreation, vendored at `engines/gen1recomp` | **Playable now** |
+| **Gen 3 — Emerald: Evolved Starters** | The original work here: an Emerald ROM hack on [pret/pokeemerald](https://github.com/pret/pokeemerald) | Builds a `.gba` |
+| **Evolved species data** | `hack/species.json` — official Pokémon Evolved lines plus our DIY branches | Shared by both |
+
+## Start here
+
+```bash
+./Play.sh            # open the hub — a tabbed launcher for everything below
+./Play.sh gen1       # play Gen 1 Red/Blue/Yellow (asks for your own ROM)
+./Play.sh emerald    # open the Emerald evolution showcase
+```
+
+Windows: `Play.bat`, same subcommands. macOS: double-click `Play-Mac.command`.
+
+The hub (`apps/hub/index.html`) is a self-contained page with a tab per track —
+Home, Gen 1, Emerald, Species and Roadmap. It is generated from
+`apps/hub/engines.json` and `hack/species.json`, so adding a future generation
+is a data edit rather than a code change:
+
+```bash
+./Play.sh build-hub   # regenerate after editing either file
+```
+
+> **No ROMs are included, and none ever will be.** Gen 1 asks for your own
+> legally obtained `.gb`/`.gbc` and verifies it by SHA-1 before importing; the
+> Emerald build links against your own Emerald `.gba`.
+
+---
+
+## Gen 3 — Emerald: Evolved Starters
 
 Emerald ROM hack built on [pret/pokeemerald](https://github.com/pret/pokeemerald). Extends the three Kanto starter lines with **official Pokémon Evolved** expansion names/data **plus** our **DIY alternate branches**.
 
@@ -58,18 +93,66 @@ make -j$(sysctl -n hw.ncpu)
 
 Output: `pokeemerald.gba`
 
+---
+
+## Gen 1 — Red / Blue / Yellow
+
+`engines/gen1recomp` is a native LÖVE2D recreation: hand-written Lua, no
+emulation and no ROM patching. Game data and graphics are decoded from a ROM you
+supply, then cached — later launches never ask for it again.
+
+```bash
+./Play.sh gen1                          # first run imports a ROM, then plays
+./Play.sh gen1 --rom /path/to/red.gb    # point the importer at a specific file
+```
+
+Only the canonical 1 MiB US ROMs are accepted, verified by SHA-1 at import time.
+Red, Blue and Yellow can all be imported and played side by side.
+
+It is vendored here for two reasons: so the original games are playable straight
+from this repo, and as a working reference for eventually giving Emerald the
+same treatment — a native engine reading a user-supplied ROM instead of patching
+one. See the Roadmap tab in the hub.
+
+---
+
 ## Project layout
 
 ```
+apps/hub/                  # NEW — tabbed launcher app
+  engines.json             #   registry: one entry per track, add future gens here
+  build_hub.py             #   generator (inlines data so file:// works)
+  index.html               #   generated page — do not edit by hand
+engines/gen1recomp/        # vendored gen1recomp (MIT, upstream layout intact)
+engines/VENDOR.md          # pinned commit, local changes, what was excluded
+engines/restore-gen1recomp-blobs.sh
 hack/species.json          # Official + DIY species metadata
 hack/showcase/             # Interactive HTML evolution viewer
 hack/assets/sprites/diy/   # Generated DIY PNG sprites
 tools/bootstrap_evolved_starters.py
 tools/generate_sprites.mjs
+Play.sh / Play.bat / Play-Mac.command
 ```
+
+The repo root remains an unmodified pokeemerald decompilation — `src/`,
+`tools/`, `data/` and the `Makefile` are untouched, so the Emerald build works
+exactly as before. gen1recomp is vendored under `engines/` rather than merged
+into the root because both projects define `src/`, `tools/`, `data/` and
+`assets/` with incompatible contents; overlaying them would break the Emerald
+build outright. Details and the re-vendoring procedure are in
+[`engines/VENDOR.md`](engines/VENDOR.md).
+
+Two large upstream directories (~186 MB of third-party LÖVE/SDL2/LuaJIT sources
+and prebuilt ANGLE/SDL2 DLLs) are not vendored — they are only needed for
+Android and Xbox/UWP packaging. Restore them with
+`engines/restore-gen1recomp-blobs.sh`.
 
 ## Credits
 
+- **gen1recomp** by [bryanthaboi](https://github.com/bryanthaboi/gen1recomp) — the Gen 1 engine, MIT licensed, © BOIS CLUB GAMES, LLC (see `engines/gen1recomp/LICENSE.MD`)
 - **Pokémon Evolved** ROM hack by AtSign8877 & team (LeafGreen) — evolution names and design inspiration
 - **pret/pokeemerald** — decompilation base
 - DIY sprites and Emerald port by this project
+
+Pokémon is a trademark of Nintendo / Creatures Inc. / GAME FREAK Inc. This is an
+unaffiliated fan project and distributes no game content.
