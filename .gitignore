@@ -47,6 +47,8 @@ prefabs.json
 /pokeemerald_modern-*.png
 release/
 node_modules/
+__pycache__/
+*.pyc
 
 # --- Vendored engines -------------------------------------------------------
 # Everything above targets the pokeemerald decomp tree at the repo root. Those

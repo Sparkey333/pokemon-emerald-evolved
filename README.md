@@ -27,6 +27,20 @@ is a data edit rather than a code change:
 ./Play.sh build-hub   # regenerate after editing either file
 ```
 
+The hub is responsive down to 320px. To check it after a change:
+
+```bash
+python3 apps/hub/preview_hub.py                    # measure every viewport
+python3 apps/hub/preview_hub.py --tab species --shots --outdir /tmp/shots
+```
+
+It renders the page at each device width and asserts the body never scrolls
+sideways, naming any element that is too wide. Both the measurement and the
+screenshots go through a width-pinned iframe on purpose: Chrome's
+`--window-size` does not set the viewport in headless mode, so screenshotting
+the page directly produces a wide layout cropped to phone width — which looks
+exactly like a responsive bug that isn't there.
+
 > **No ROMs are included, and none ever will be.** Gen 1 asks for your own
 > legally obtained `.gb`/`.gbc` and verifies it by SHA-1 before importing; the
 > Emerald build links against your own Emerald `.gba`.
@@ -122,6 +136,7 @@ one. See the Roadmap tab in the hub.
 apps/hub/                  # NEW — tabbed launcher app
   engines.json             #   registry: one entry per track, add future gens here
   build_hub.py             #   generator (inlines data so file:// works)
+  preview_hub.py           #   responsive check + device screenshots
   index.html               #   generated page — do not edit by hand
 engines/gen1recomp/        # vendored gen1recomp (MIT, upstream layout intact)
 engines/VENDOR.md          # pinned commit, local changes, what was excluded

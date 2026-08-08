@@ -61,6 +61,16 @@ def pinned_commit(vendor_md: Path) -> str:
 
 # --------------------------------------------------------------- fragments
 
+def tw(table_html: str) -> str:
+    """Wrap a table so it scrolls inside its own box instead of widening the page.
+
+    Long content (SHA-1 hashes, shell commands) cannot wrap usefully, so on a
+    phone the table has to scroll horizontally on its own. Without this the
+    table sets a floor on the page width and the whole body scrolls sideways.
+    """
+    return f'<div class="tablewrap">{table_html}</div>'
+
+
 def status_pill(status: str) -> str:
     label, cls = STATUS_LABEL.get(status, (status, "idle"))
     return f'<span class="pill {cls}">{e(label)}</span>'
@@ -155,7 +165,7 @@ def species_tab(species: dict) -> str:
             f'<tr><th>{e(k.replace("_", " ").title())}</th><td>{e(v)}</td></tr>'
             for k, v in meta.items()
         )
-        out.append(f'<table class="meta"><caption>Data provenance</caption>{rows}</table>')
+        out.append(tw(f'<table class="meta"><caption>Data provenance</caption>{rows}</table>'))
 
     return "\n".join(out)
 
@@ -171,8 +181,8 @@ def rom_block(rom: dict | None) -> str:
         '<div class="rom">'
         '<h4>You supply the game content</h4>'
         f'<p>{e(rom.get("note", ""))}</p>'
-        f'<table class="hashes"><tr><th>ROM</th><th>SHA-1</th></tr>{rows}</table>'
-        '</div>'
+        + tw(f'<table class="hashes"><tr><th>ROM</th><th>SHA-1</th></tr>{rows}</table>')
+        + '</div>'
     )
 
 
@@ -192,7 +202,7 @@ def app_tab(app: dict) -> str:
             f'<td class="muted">{e(l.get("note", ""))}</td></tr>'
             for l in app["launch"]
         )
-        out.append(f'<h4>Launch</h4><table class="launch">{rows}</table>')
+        out.append('<h4>Launch</h4>' + tw(f'<table class="launch">{rows}</table>'))
 
     if app.get("steps"):
         items = "".join(f'<li><code>{e(s)}</code></li>' if "  " not in s and (
@@ -277,19 +287,28 @@ together.</p>
 CSS = """
 :root{--bg:#0a0e1a;--panel:#121a2e;--panel2:#0d1324;--line:#2a3858;--text:#e8edf8;
 --muted:#8b9bc0;--dim:#5c6b8a;--official:#fbbf24;--diy:#a78bfa;--ok:#4ade80;--warn:#fb923c}
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}
+html{-webkit-text-size-adjust:100%}
 body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
 background:radial-gradient(ellipse at top,#1a2540 0%,var(--bg) 55%) no-repeat;
-background-color:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+background-color:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;
+overflow-wrap:break-word}
 .wrap{max-width:1100px;margin:0 auto;padding:0 1rem 4rem}
 header{text-align:center;padding:2.5rem 1rem 1.5rem}
-header h1{font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:-.02em}
+header h1{font-size:clamp(1.35rem,5.5vw,2.4rem);letter-spacing:-.02em}
 header p{color:var(--muted);max-width:720px;margin:.6rem auto 0}
-nav{position:sticky;top:0;z-index:10;display:flex;gap:.35rem;flex-wrap:wrap;
-justify-content:center;padding:.75rem 0;background:rgba(10,14,26,.92);
-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-bottom:1.75rem}
+/* Nav is a scrollable strip rather than a wrapping block: at phone widths the
+   five tabs wrapped to a second row and clipped the last label. */
+nav{position:sticky;top:0;z-index:10;display:flex;gap:.35rem;flex-wrap:nowrap;
+justify-content:flex-start;padding:.6rem .75rem;background:rgba(10,14,26,.92);
+backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-bottom:1.75rem;
+overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+scroll-snap-type:x proximity}
+nav::-webkit-scrollbar{display:none}
 nav button{background:transparent;border:1px solid transparent;color:var(--muted);
-padding:.5rem 1rem;border-radius:999px;cursor:pointer;font-size:.88rem;font-family:inherit}
+padding:.55rem 1rem;border-radius:999px;cursor:pointer;font-size:.88rem;font-family:inherit;
+flex:0 0 auto;white-space:nowrap;scroll-snap-align:center;min-height:44px}
+@media(min-width:720px){nav{justify-content:center;flex-wrap:wrap;overflow-x:visible}}
 nav button:hover{color:var(--text);background:#1a2540}
 nav button[aria-selected=true]{background:#1e2a47;border-color:var(--line);color:var(--text);font-weight:600}
 .panel[hidden]{display:none}
@@ -319,10 +338,16 @@ border-radius:10px;padding:1rem 1.15rem;margin-bottom:1rem}
 .callout p{font-size:.88rem;color:var(--muted)}
 .facts{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;font-size:.88rem;margin:1rem 0}
 .facts dt{color:var(--dim)}
-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.5rem 0 1rem}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.5rem 0 1rem;
+border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
 th,td{border:1px solid var(--line);padding:.45rem .6rem;text-align:left;vertical-align:top}
 th{background:#1a2540;color:var(--muted);font-weight:600}
 caption{text-align:left;color:var(--dim);font-size:.8rem;padding-bottom:.35rem}
+/* SHA-1s and shell commands cannot wrap at word boundaries; let them break so a
+   narrow screen scrolls the table box instead of the whole page. */
+.hashes td code{word-break:break-all}
+.launch code{white-space:nowrap}
 .muted{color:var(--dim)}
 .steps{margin:.5rem 0 1rem 1.2rem;font-size:.88rem;color:var(--muted)}
 .steps li{margin:.3rem 0}
@@ -345,8 +370,10 @@ border-radius:12px;padding:1.1rem;margin-bottom:1.1rem}
 .branch-label.official{color:var(--official)}
 .branch-label.diy{color:var(--diy)}
 .chain{display:flex;align-items:stretch;flex-wrap:wrap;gap:.4rem}
+/* Stages grow to share the row and wrap onto the next one. Fixed-width cards
+   pushed a 6-stage line past the card edge on a phone. */
 .stage{background:var(--panel2);border:1px solid var(--line);border-radius:9px;
-padding:.55rem .7rem;min-width:112px;flex:0 1 auto}
+padding:.55rem .7rem;flex:1 1 130px;max-width:100%}
 .stage-name{font-size:.83rem;font-weight:600}
 .stage-sub{font-size:.7rem;color:var(--dim)}
 .types{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:.3rem}
@@ -356,11 +383,40 @@ color:var(--t);border:1px solid color-mix(in srgb,var(--t) 35%,transparent)}
 .arrow{align-self:center;color:#4a5a7a;font-size:1.1rem;padding:0 .1rem}
 .note{font-size:.8rem;color:var(--dim);margin-top:.6rem;font-style:italic}
 .road{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:1rem 1.15rem;margin-bottom:.9rem}
-.road-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-bottom:.4rem}
+/* Wraps because the pill is nowrap: a long title plus "In progress" could not
+   share one line at 320px and pushed the page 2px wide. */
+.road-head{display:flex;justify-content:space-between;align-items:center;gap:.5rem .75rem;
+margin-bottom:.4rem;flex-wrap:wrap}
+.card-head{flex-wrap:wrap}
 .road p{font-size:.88rem;color:var(--muted)}
 .ref{margin-top:.5rem}
 footer{text-align:center;padding:2rem 1rem;color:var(--dim);font-size:.78rem;border-top:1px solid #243049;margin-top:2rem}
-@media(max-width:560px){.facts{grid-template-columns:1fr}.facts dt{margin-top:.4rem}}
+
+/* ---- phones ---- */
+@media(max-width:560px){
+  .facts{grid-template-columns:1fr;gap:.15rem}
+  .facts dt{margin-top:.5rem}
+  header{padding:1.6rem .9rem 1rem}
+  header p{font-size:.92rem}
+  .wrap{padding:0 .9rem 3rem}
+  h2{font-size:1.2rem}
+  .lead{font-size:.93rem}
+  /* One card per row; 270px minimums caused a sideways scroll at 360px. */
+  .cards{grid-template-columns:1fr;gap:.75rem}
+  .callout,.road,.line-card,.rom{padding:.85rem .9rem}
+  .legend{gap:.4rem}
+  .legend .key{font-size:.72rem}
+  /* Tap targets: links and pills were under the 44px touch minimum. */
+  .link{padding:.6rem .9rem;min-height:44px;display:inline-flex;align-items:center}
+  .card{padding:1rem}
+  .arrow{display:none}
+  .stage{flex:1 1 calc(50% - .4rem)}
+  .steps{margin-left:1.1rem}
+  footer{padding:1.5rem .9rem}
+}
+@media(max-width:360px){
+  .stage{flex:1 1 100%}
+}
 """
 
 JS = """
