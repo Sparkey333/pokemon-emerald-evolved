@@ -1,0 +1,11 @@
+# This file is NOT from upstream — it exists to protect upstream's bytes.
+#
+# The repo root's .gitattributes normalizes line endings for the pokeemerald
+# decomp tree (*.ps1 -> CRLF, *.c/*.h/*.md/*.json/*.txt -> LF). Those rules are
+# scoped to the decomp at the repo root and are wrong for a vendored subtree:
+# rewriting upstream's line endings makes every re-vendor from
+# bryanthaboi/gen1recomp show spurious whitespace diffs across ~1200 files.
+#
+# Upstream ships no .gitattributes, so restore git's default (no normalization)
+# and keep this tree byte-identical to the commit recorded in VENDOR.md.
+* -text

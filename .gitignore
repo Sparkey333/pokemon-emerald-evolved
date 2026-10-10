@@ -26,6 +26,7 @@ tools/agbcc
 tools/compresSmol/
 *.map
 *.bat
+!/Play.bat
 *.dump
 *.sa*
 Thumbs.db
@@ -46,3 +47,26 @@ prefabs.json
 /pokeemerald_modern-*.png
 release/
 node_modules/
+__pycache__/
+*.pyc
+
+# --- Vendored engines -------------------------------------------------------
+# Everything above targets the pokeemerald decomp tree at the repo root. Those
+# patterns (*.bat, *.js, *.a, *.map, build/, ...) are far too broad for the
+# vendored engine subtrees and would silently swallow real upstream sources
+# (Play-Windows.bat, gradlew.bat, test/*.test.js, ...). Opt the subtree out
+# here; engines/gen1recomp/.gitignore is deeper, so its own rules still take
+# precedence and its build artifacts stay ignored.
+!engines/gen1recomp/**
+
+# apps/ is our own code, not decomp build output. The *.js rule above is for
+# generated tools; it would silently drop apps/realms/src/*.js (it did once).
+!/apps/**/*.js
+
+# ...but never absorb the two large third-party trees that upstream tracks and
+# we deliberately do not vendor (~186 MB of LOVE/SDL2/LuaJIT/oboe sources and
+# prebuilt ANGLE/SDL2/OpenAL DLLs). engines/restore-gen1recomp-blobs.sh drops
+# them back in for Android/UWP builds; these rules keep that from dirtying the
+# working tree or getting committed. See engines/VENDOR.md.
+engines/gen1recomp/mobile/android/love/src/jni/
+engines/gen1recomp/ports/uwp/third_party/

@@ -1,0 +1,1108 @@
+<title>Emerald Realms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: one fixed console frame (header + tabs) over a stage that swaps
+   screens. Dark-first by choice: an emerald console, same in every theme. */
+:root{
+  --bg:#07120d; --panel:#0d1f16; --panel2:#102a1e; --line:#1f4531;
+  --fg:#e6f2ea; --muted:#8fb3a0; --dim:#5a7f6a;
+  --jade:#3ddc84; --amber:#f5b942; --coral:#ff6b6b; --sky:#5ec8f2;
+  --font-display:"Silkscreen","Press Start 2P",ui-monospace,monospace;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}
+/* display:flex on .modal/.arena would otherwise beat the browser's default
+   [hidden] rule; the artifact skeleton adds this, the repo copy must too. */
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.5;
+  overflow-wrap:break-word;-webkit-text-size-adjust:100%}
+#app{max-width:960px;margin:0 auto;padding-inline:16px;padding-block:12px 32px}
+
+.top{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1rem}
+.brand{display:flex;flex-direction:column;gap:.1rem}
+.logo{font-family:var(--font-display);font-size:1.25rem;color:var(--jade);letter-spacing:.02em}
+.sub{font-size:.8rem;color:var(--muted)}
+.tabs{display:flex;gap:.3rem;overflow-x:auto;scrollbar-width:none;padding-bottom:.2rem}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:var(--muted);
+  font:600 .82rem var(--font-body);padding:.5rem .9rem;border-radius:999px;cursor:pointer;min-height:40px}
+.tabs button[aria-selected=true]{background:var(--panel2);color:var(--jade);border-color:var(--jade)}
+.tabs button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1rem;min-height:420px}
+.panel[hidden],.screen[hidden]{display:none}
+h1.title{font-family:var(--font-display);font-size:clamp(1.4rem,5vw,2.2rem);color:var(--jade);text-wrap:balance}
+h2{font-family:var(--font-display);font-size:1rem;color:var(--jade);margin-bottom:.5rem;text-wrap:balance}
+h3{font-size:.9rem;color:var(--muted);margin:1.25rem 0 .5rem;text-transform:uppercase;letter-spacing:.06em}
+.lede{color:var(--muted);max-width:60ch;margin:.75rem 0 1.25rem}
+.muted{color:var(--muted);font-size:.9rem}
+.hint{color:var(--dim);font-size:.8rem;margin-top:.75rem}
+
+.btnrow{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem}
+.btn{background:var(--panel2);border:1px solid var(--line);color:var(--fg);font:600 .88rem var(--font-body);
+  padding:.6rem 1rem;border-radius:8px;cursor:pointer;min-height:44px}
+.btn:hover{border-color:var(--jade)}
+.btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.btn.primary{background:var(--jade);color:#04150c;border-color:var(--jade)}
+.btn.danger{color:var(--coral)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* starters */
+.starters{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:1rem}
+.starter{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:.9rem;text-align:center;
+  cursor:pointer;font-family:inherit;color:inherit}
+.starter:hover{border-color:var(--jade)}
+.starter canvas{width:96px;height:96px;image-rendering:pixelated;display:block;margin:0 auto .4rem}
+.starter .n{font-weight:600}
+.starter .t{font-size:.75rem;color:var(--muted)}
+
+/* world */
+.worldbar{display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;align-items:baseline;margin-bottom:.5rem}
+.realm{font-family:var(--font-display);color:var(--amber);font-size:.9rem}
+.worldwrap{position:relative}
+#map{width:100%;max-width:512px;aspect-ratio:4/3;display:block;margin:0 auto;image-rendering:pixelated;
+  border:2px solid var(--line);border-radius:8px;background:#061a10}
+.dpad{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:4px;
+  justify-content:center;margin:.75rem auto 0}
+.dpad button{background:var(--panel2);border:1px solid var(--line);color:var(--jade);font-size:1.1rem;border-radius:8px;cursor:pointer}
+.dpad button[data-dir=up]{grid-column:2;grid-row:1}
+.dpad button[data-dir=left]{grid-column:1;grid-row:2}
+.dpad button[data-dir=down]{grid-column:2;grid-row:3}
+.dpad button[data-dir=right]{grid-column:3;grid-row:2}
+.dpad button:active{background:var(--jade);color:#04150c}
+.log{margin-top:.6rem;font-size:.85rem;color:var(--muted);min-height:1.4em}
+
+/* battle */
+.arena{display:grid;gap:.5rem;grid-template-columns:1fr 1fr;align-items:end;background:
+  linear-gradient(180deg,#0a2417 0%,#0d2f1d 60%,#143b26 100%);border:1px solid var(--line);border-radius:12px;padding:.75rem}
+.side{display:flex;flex-direction:column;gap:.35rem}
+.side.foe{align-items:flex-start}
+.side.ally{align-items:flex-end;grid-column:2}
+.side.foe{grid-column:1;grid-row:1}
+.side.ally{grid-row:1}
+.sprite{width:96px;height:96px;image-rendering:pixelated}
+.side.foe .sprite{align-self:flex-end}
+.side.ally .sprite{align-self:flex-start}
+.plate{background:rgba(7,18,13,.85);border:1px solid var(--line);border-radius:8px;padding:.4rem .6rem;min-width:150px;font-size:.8rem}
+.mname{font-weight:600}
+.lv{color:var(--muted);margin-left:.4rem}
+.hpbar{height:7px;background:#0a1810;border-radius:4px;margin-top:.3rem;overflow:hidden}
+.hp{height:100%;background:var(--jade);width:100%;transition:width .35s}
+.hp.mid{background:var(--amber)}.hp.low{background:var(--coral)}
+.hptext{font-size:.7rem;color:var(--muted);margin-top:.15rem;font-variant-numeric:tabular-nums}
+.xpbar{height:4px;background:#0a1810;border-radius:4px;margin-top:.25rem;overflow:hidden}
+.xp{height:100%;background:var(--sky);width:0;transition:width .35s}
+.battlelog{min-height:3.2em;font-size:.9rem;margin:.6rem 0;padding:.5rem .7rem;background:var(--panel2);
+  border:1px solid var(--line);border-radius:8px}
+.bmenu{display:grid;gap:.4rem;grid-template-columns:repeat(2,1fr)}
+.bmenu button{background:var(--panel2);border:1px solid var(--line);color:var(--fg);font:600 .85rem var(--font-body);
+  padding:.6rem;border-radius:8px;cursor:pointer;min-height:44px;text-align:left}
+.bmenu button small{display:block;color:var(--muted);font-weight:400;font-size:.72rem}
+.bmenu button:hover{border-color:var(--jade)}
+.bmenu button.t{border-left:3px solid var(--t)}
+
+/* party / codex */
+.partygrid,.codexgrid{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.mon{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:.6rem;text-align:left;
+  font-family:inherit;color:inherit;cursor:pointer;display:flex;gap:.5rem;align-items:center}
+.mon canvas{width:48px;height:48px;image-rendering:pixelated;flex:0 0 auto}
+.mon .n{font-weight:600;font-size:.85rem}
+.mon .d{font-size:.72rem;color:var(--muted)}
+.mon.lead{border-color:var(--jade)}
+.mon.unknown{opacity:.45}
+.type{display:inline-block;font-size:.62rem;padding:.05rem .4rem;border-radius:999px;margin-right:.2rem;
+  background:color-mix(in srgb,var(--t) 22%,transparent);color:var(--t);border:1px solid color-mix(in srgb,var(--t) 40%,transparent)}
+.principles{margin-left:1.1rem;color:var(--muted);font-size:.88rem}
+.principles li{margin:.3rem 0}
+.principles b{color:var(--fg)}
+
+/* hacks */
+.hackbar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.75rem 0}
+.hackbar label{display:flex;gap:.4rem;align-items:center;font-size:.85rem;color:var(--muted)}
+select,input[type=text],input[type=number],textarea{background:var(--panel2);border:1px solid var(--line);color:var(--fg);
+  font:inherit;padding:.4rem .5rem;border-radius:6px}
+textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem}
+.hackedit{display:grid;gap:.75rem}
+.hrow{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));align-items:end;
+  background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:.7rem}
+.hrow label{display:flex;flex-direction:column;gap:.2rem;font-size:.75rem;color:var(--muted)}
+.hrow input,.hrow select{width:100%}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.8rem}
+th,td{border:1px solid var(--line);padding:.35rem .5rem;text-align:left}
+th{color:var(--muted);background:var(--panel2);font-weight:600}
+td input{width:5.5em}
+
+/* saves */
+.slots{display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.slot{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:.8rem}
+.slot .h{font-weight:600;margin-bottom:.2rem}
+.slot .d{font-size:.78rem;color:var(--muted);margin-bottom:.5rem}
+.slot .btnrow{margin-top:.4rem}
+.slot .btn{padding:.45rem .7rem;min-height:38px;font-size:.8rem}
+
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  background:var(--panel2);border:1px solid var(--jade);color:var(--fg);padding:.6rem 1rem;border-radius:999px;
+  font-size:.85rem;z-index:20;max-width:calc(100% - 32px)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:30;padding:16px}
+.modalbox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem;max-width:420px;width:100%}
+
+@media(min-width:640px){
+  .top{flex-direction:row;justify-content:space-between;align-items:center}
+  .tabs{justify-content:flex-end}
+}
+@media(max-width:520px){
+  .arena{grid-template-columns:1fr}
+  .side.ally{grid-column:1;grid-row:2}
+  .side.foe{grid-row:1}
+  .plate{min-width:0;width:100%}
+  .stage{padding:.75rem}
+}
+@media(prefers-reduced-motion:reduce){.hp,.xp{transition:none}}
+
+</style>
+
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <span class="logo">Emerald Realms</span>
+      <span class="sub">an original monster-collector · five realms · your own hacks</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button data-tab="play" aria-selected="true">Play</button>
+      <button data-tab="party">Party</button>
+      <button data-tab="codex">Codex</button>
+      <button data-tab="hacks">Hack Lab</button>
+      <button data-tab="saves">Saves</button>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <!-- PLAY -->
+    <section class="panel" id="tab-play">
+      <div id="screen-title" class="screen">
+        <h1 class="title">Emerald Realms</h1>
+        <p class="lede">Five realms, thirty-six original creatures, and a lab where you write your own hacks. Nothing here belongs to anyone else.</p>
+        <div class="btnrow">
+          <button class="btn primary" id="btn-new">New journey</button>
+          <button class="btn" id="btn-continue" hidden>Continue</button>
+        </div>
+        <p class="hint" id="title-hint"></p>
+      </div>
+
+      <div id="screen-starter" class="screen" hidden>
+        <h2>Choose your partner</h2>
+        <p class="muted">Each line evolves twice. Grass beats Water, Water beats Fire, Fire beats Grass.</p>
+        <div class="starters" id="starters"></div>
+      </div>
+
+      <div id="screen-world" class="screen" hidden>
+        <div class="worldbar">
+          <span class="realm" id="realm-name"></span>
+          <span class="muted" id="world-hint">Arrows / WASD to move · walk in tall grass</span>
+        </div>
+        <div class="worldwrap">
+          <canvas id="map" width="512" height="384"></canvas>
+          <div class="dpad" aria-label="Move">
+            <button data-dir="up" aria-label="Up">▲</button>
+            <button data-dir="left" aria-label="Left">◀</button>
+            <button data-dir="down" aria-label="Down">▼</button>
+            <button data-dir="right" aria-label="Right">▶</button>
+          </div>
+        </div>
+        <div class="log" id="world-log"></div>
+      </div>
+
+      <div id="screen-battle" class="screen" hidden>
+        <div class="arena">
+          <div class="side foe">
+            <div class="plate"><span class="mname" id="foe-name"></span><span class="lv" id="foe-lv"></span>
+              <div class="hpbar"><div class="hp" id="foe-hp"></div></div></div>
+            <canvas class="sprite" id="foe-sprite" width="96" height="96"></canvas>
+          </div>
+          <div class="side ally">
+            <canvas class="sprite" id="ally-sprite" width="96" height="96"></canvas>
+            <div class="plate"><span class="mname" id="ally-name"></span><span class="lv" id="ally-lv"></span>
+              <div class="hpbar"><div class="hp" id="ally-hp"></div></div>
+              <div class="hptext" id="ally-hptext"></div>
+              <div class="xpbar"><div class="xp" id="ally-xp"></div></div></div>
+          </div>
+        </div>
+        <div class="battlelog" id="battle-log"></div>
+        <div class="bmenu" id="battle-menu"></div>
+      </div>
+    </section>
+
+    <!-- PARTY -->
+    <section class="panel" id="tab-party" hidden>
+      <h2>Party</h2>
+      <p class="muted">Tap a creature to make it lead. Up to six travel with you; the rest wait in the box.</p>
+      <div class="partygrid" id="party-grid"></div>
+      <h3>Box</h3>
+      <div class="partygrid" id="box-grid"></div>
+    </section>
+
+    <!-- CODEX -->
+    <section class="panel" id="tab-codex">
+      <h2>Codex</h2>
+      <p class="muted" id="codex-count"></p>
+      <div class="codexgrid" id="codex-grid"></div>
+      <h3>Design principles</h3>
+      <p class="muted">Every creature follows a rule the first two generations of the genre established. The rules are ideas, and ideas belong to everyone; the creatures that follow them here are ours.</p>
+      <ul class="principles" id="principles"></ul>
+    </section>
+
+    <!-- HACKS -->
+    <section class="panel" id="tab-hacks" hidden>
+      <h2>Hack Lab</h2>
+      <p class="muted">A hack is a set of changes layered over the base game: rebalanced stats, new typings, different evolution levels, harder wilds. Save as many as you like. A new journey starts on whichever hack is active.</p>
+      <div class="hackbar">
+        <label>Active hack <select id="hack-active"></select></label>
+        <button class="btn" id="hack-new">New hack</button>
+        <button class="btn" id="hack-dup">Duplicate</button>
+        <button class="btn danger" id="hack-del">Delete</button>
+      </div>
+      <div class="hackedit" id="hack-edit"></div>
+      <h3>Share</h3>
+      <p class="muted">Copy the text to keep or share a hack. Paste one in to load it.</p>
+      <textarea id="hack-text" rows="5" spellcheck="false"></textarea>
+      <div class="btnrow">
+        <button class="btn" id="hack-copy">Copy active hack</button>
+        <button class="btn" id="hack-paste">Load from text</button>
+      </div>
+    </section>
+
+    <!-- SAVES -->
+    <section class="panel" id="tab-saves" hidden>
+      <h2>Saves</h2>
+      <p class="muted">Three slots live in this browser. Copy a slot's text to back it up or move it anywhere; paste text to restore it.</p>
+      <div class="slots" id="slots"></div>
+      <h3>Transfer</h3>
+      <textarea id="save-text" rows="5" spellcheck="false" placeholder="Paste save text here, then choose a slot to load it into."></textarea>
+      <div class="btnrow">
+        <button class="btn" id="save-copy">Copy current game</button>
+        <button class="btn" id="save-load-1">Load text → slot 1</button>
+        <button class="btn" id="save-load-2">Load text → slot 2</button>
+        <button class="btn" id="save-load-3">Load text → slot 3</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+  <div class="modal" id="modal" hidden>
+    <div class="modalbox">
+      <p id="modal-text"></p>
+      <div class="btnrow"><button class="btn" id="modal-no">Cancel</button><button class="btn primary" id="modal-yes">Confirm</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- data.js ----
+/* All game data. Every creature, name, and realm here is original to this
+   project. The design principles are genre conventions, listed openly. */
+
+const TYPES = ["Normal","Grass","Fire","Water","Bug","Rock","Ice","Electric","Flying","Ghost","Psychic","Dragon"];
+const TYPE_COLOR = {Normal:"#b8b8a8",Grass:"#3ddc84",Fire:"#ff8a4c",Water:"#5ec8f2",Bug:"#b6d94c",Rock:"#c9a66b",
+  Ice:"#a8e6f0",Electric:"#f5e04c",Flying:"#b9c7ff",Ghost:"#9b7bff",Psychic:"#ff7bd1",Dragon:"#7c6bff"};
+
+// attacker -> defender -> multiplier (absent = 1). Our own chart; the type
+// triangle and a few classic matchups are kept because players expect them.
+const CHART = {
+  Normal:{Rock:.5,Ghost:0},
+  Grass:{Water:2,Rock:2,Fire:.5,Grass:.5,Bug:.5,Flying:.5,Dragon:.5},
+  Fire:{Grass:2,Bug:2,Ice:2,Water:.5,Fire:.5,Rock:.5,Dragon:.5},
+  Water:{Fire:2,Rock:2,Water:.5,Grass:.5,Dragon:.5},
+  Bug:{Grass:2,Psychic:2,Fire:.5,Flying:.5,Ghost:.5},
+  Rock:{Fire:2,Ice:2,Flying:2,Bug:2},
+  Ice:{Grass:2,Flying:2,Dragon:2,Fire:.5,Water:.5,Ice:.5},
+  Electric:{Water:2,Flying:2,Grass:.5,Electric:.5,Dragon:.5},
+  Flying:{Grass:2,Bug:2,Rock:.5,Electric:.5},
+  Ghost:{Ghost:2,Psychic:2,Normal:0},
+  Psychic:{Rock:2,Psychic:.5,Ghost:.5},
+  Dragon:{Dragon:2,Rock:.5},
+};
+function effectiveness(atk, defTypes){ return defTypes.reduce((m,t)=>m*((CHART[atk]||{})[t] ?? 1), 1); }
+
+// pow 0 = status move. fx: {heal:0.5} or {stat:"atk"|"def", who:"self"|"foe", d:+1/-1}
+const MOVES = {
+  tackle:{n:"Tackle",t:"Normal",p:40,a:100}, scratch:{n:"Scratch",t:"Normal",p:40,a:100},
+  slam:{n:"Slam",t:"Normal",p:70,a:90}, growl:{n:"Growl",t:"Normal",p:0,a:100,fx:{stat:"atk",who:"foe",d:-1}},
+  harden:{n:"Harden",t:"Normal",p:0,a:100,fx:{stat:"def",who:"self",d:1}}, mend:{n:"Mend",t:"Normal",p:0,a:100,fx:{heal:.5}},
+  leaflet:{n:"Leaflet",t:"Grass",p:40,a:100}, vinelash:{n:"Vine Lash",t:"Grass",p:60,a:100},
+  petalstorm:{n:"Petal Storm",t:"Grass",p:90,a:90}, bloom:{n:"Bloom",t:"Grass",p:0,a:100,fx:{heal:.5}},
+  ember:{n:"Ember",t:"Fire",p:40,a:100}, flamejet:{n:"Flame Jet",t:"Fire",p:65,a:100}, inferno:{n:"Inferno",t:"Fire",p:95,a:85},
+  bubble:{n:"Bubble",t:"Water",p:40,a:100}, waterjet:{n:"Water Jet",t:"Water",p:65,a:100}, tidalcrash:{n:"Tidal Crash",t:"Water",p:95,a:85},
+  nibble:{n:"Nibble",t:"Bug",p:35,a:100}, swarmbite:{n:"Swarm Bite",t:"Bug",p:60,a:100},
+  pebble:{n:"Pebble",t:"Rock",p:40,a:100}, rockslam:{n:"Rock Slam",t:"Rock",p:75,a:90},
+  frostnip:{n:"Frost Nip",t:"Ice",p:40,a:100}, icelance:{n:"Ice Lance",t:"Ice",p:70,a:100},
+  spark:{n:"Spark",t:"Electric",p:40,a:100}, voltbolt:{n:"Volt Bolt",t:"Electric",p:75,a:100}, thunderclap:{n:"Thunderclap",t:"Electric",p:95,a:85},
+  gust:{n:"Gust",t:"Flying",p:40,a:100}, wingcut:{n:"Wing Cut",t:"Flying",p:65,a:100},
+  haunt:{n:"Haunt",t:"Ghost",p:45,a:100}, spectreclaw:{n:"Spectre Claw",t:"Ghost",p:75,a:100},
+  mindjab:{n:"Mind Jab",t:"Psychic",p:45,a:100}, psywave:{n:"Psy Wave",t:"Psychic",p:75,a:100},
+  dragonsnap:{n:"Dragon Snap",t:"Dragon",p:60,a:100}, dragonfury:{n:"Dragon Fury",t:"Dragon",p:95,a:85},
+};
+
+// Species. st = [hp,atk,def,spd]. evo = {to,lv}. plan = sprite body plan.
+// pal = [main, belly, accent]. pr = design-principle id (see PRINCIPLES).
+const SPECIES = [
+  // starters — the three DIY lines, now with original base forms and no Kanto ancestry
+  {id:1,n:"Sproutle",t:["Grass"],st:[45,48,46,48],catch:45,xp:64,evo:{to:2,lv:16},plan:"quad",pal:["#4fcf7a","#d8f5a8","#ff7bd1"],realm:0,pr:"triangle",
+    learn:[[1,"tackle"],[1,"growl"],[5,"leaflet"],[11,"vinelash"],[17,"bloom"]]},
+  {id:2,n:"Florasaur",t:["Grass"],st:[60,62,63,60],catch:45,xp:142,evo:{to:3,lv:34},plan:"quad",pal:["#2fa85f","#cdeea0","#ff5cc1"],realm:0,pr:"triangle",
+    learn:[[1,"tackle"],[1,"leaflet"],[11,"vinelash"],[17,"bloom"],[24,"slam"],[31,"petalstorm"]]},
+  {id:3,n:"Verdantaur",t:["Grass"],st:[82,84,83,80],catch:45,xp:236,plan:"quad",pal:["#1f8a4b","#bde68e","#ff3fb0"],realm:0,pr:"triangle",
+    learn:[[1,"vinelash"],[1,"bloom"],[24,"slam"],[31,"petalstorm"],[40,"harden"]]},
+  {id:4,n:"Cindrake",t:["Fire"],st:[40,52,43,65],catch:45,xp:62,evo:{to:5,lv:16},plan:"biped",pal:["#ff8a4c","#ffe0a8","#ffd93d"],realm:0,pr:"triangle",
+    learn:[[1,"scratch"],[1,"growl"],[5,"ember"],[12,"flamejet"],[18,"slam"]]},
+  {id:5,n:"Charblaze",t:["Fire"],st:[58,64,58,80],catch:45,xp:142,evo:{to:6,lv:34},plan:"biped",pal:["#f46a2e","#ffd39a","#ffc400"],realm:0,pr:"triangle",
+    learn:[[1,"scratch"],[1,"ember"],[12,"flamejet"],[18,"slam"],[26,"wingcut"],[33,"inferno"]]},
+  {id:6,n:"Infernodrake",t:["Fire","Dragon"],st:[78,84,78,100],catch:45,xp:240,plan:"serpent",pal:["#d9441a","#ffc27a","#ffea00"],realm:0,pr:"triangle",
+    learn:[[1,"flamejet"],[1,"wingcut"],[26,"dragonsnap"],[33,"inferno"],[42,"dragonfury"]]},
+  {id:7,n:"Shellow",t:["Water"],st:[44,48,65,43],catch:45,xp:63,evo:{to:8,lv:16},plan:"turtle",pal:["#5ec8f2","#e4f6ff","#2d7fb3"],realm:0,pr:"triangle",
+    learn:[[1,"tackle"],[1,"harden"],[5,"bubble"],[12,"waterjet"],[19,"slam"]]},
+  {id:8,n:"Torrentoise",t:["Water"],st:[59,63,80,58],catch:45,xp:142,evo:{to:9,lv:34},plan:"turtle",pal:["#3aa9dc","#d6f0ff","#1d5f8a"],realm:0,pr:"triangle",
+    learn:[[1,"tackle"],[1,"bubble"],[12,"waterjet"],[19,"slam"],[27,"icelance"],[35,"tidalcrash"]]},
+  {id:9,n:"Tsunamoise",t:["Water"],st:[79,83,105,78],catch:45,xp:239,plan:"turtle",pal:["#2186b8","#c7ebff","#123f5e"],realm:0,pr:"triangle",
+    learn:[[1,"waterjet"],[1,"harden"],[27,"icelance"],[35,"tidalcrash"],[44,"mend"]]},
+
+  // Verdant Realm
+  {id:10,n:"Mothling",t:["Bug"],st:[40,35,30,45],catch:255,xp:39,evo:{to:11,lv:14},plan:"bug",pal:["#b6d94c","#f0f7c8","#5a7f6a"],realm:0,pr:"earlybug",
+    learn:[[1,"nibble"],[4,"harden"],[9,"leaflet"]]},
+  {id:11,n:"Lumoth",t:["Bug","Grass"],st:[60,55,50,70],catch:120,xp:120,plan:"bug",pal:["#9ccc3c","#fdf6c3","#3ddc84"],realm:0,pr:"earlybug",
+    learn:[[1,"nibble"],[1,"leaflet"],[14,"swarmbite"],[20,"vinelash"],[28,"gust"]]},
+  {id:12,n:"Bramblit",t:["Normal"],st:[38,45,38,50],catch:255,xp:45,evo:{to:13,lv:18},plan:"quad",pal:["#c9a66b","#f1e2c3","#4fcf7a"],realm:0,pr:"pest",
+    learn:[[1,"tackle"],[3,"growl"],[8,"scratch"],[14,"leaflet"]]},
+  {id:13,n:"Thornhare",t:["Normal","Grass"],st:[66,72,58,78],catch:127,xp:140,plan:"quad",pal:["#a8824a","#ecd8ad","#2fa85f"],realm:0,pr:"pest",
+    learn:[[1,"scratch"],[1,"leaflet"],[18,"vinelash"],[24,"slam"],[32,"petalstorm"]]},
+  {id:14,n:"Pipwing",t:["Normal","Flying"],st:[40,42,36,60],catch:255,xp:48,evo:{to:15,lv:20},plan:"bird",pal:["#b9c7ff","#fff3d6","#f5b942"],realm:0,pr:"routebird",
+    learn:[[1,"tackle"],[5,"gust"],[11,"growl"],[16,"wingcut"]]},
+  {id:15,n:"Galewing",t:["Normal","Flying"],st:[68,70,56,95],catch:120,xp:148,plan:"bird",pal:["#8fa3ff","#fff0c8","#ff8a4c"],realm:0,pr:"routebird",
+    learn:[[1,"gust"],[1,"wingcut"],[20,"slam"],[28,"wingcut"],[36,"dragonsnap"]]},
+  {id:16,n:"Mossloaf",t:["Grass"],st:[90,45,80,20],catch:150,xp:110,plan:"blob",pal:["#5a9a4a","#9fd48a","#3b2a1a"],realm:0,pr:"bruiser",
+    learn:[[1,"tackle"],[1,"harden"],[7,"leaflet"],[15,"bloom"],[23,"slam"],[31,"vinelash"]]},
+
+  // Ember Realm
+  {id:17,n:"Cindermite",t:["Fire","Bug"],st:[42,50,40,55],catch:200,xp:60,evo:{to:18,lv:22},plan:"bug",pal:["#ff8a4c","#ffd39a","#3b2a1a"],realm:1,pr:"earlybug",
+    learn:[[1,"nibble"],[6,"ember"],[12,"swarmbite"],[18,"flamejet"]]},
+  {id:18,n:"Pyroclast",t:["Fire","Rock"],st:[70,78,82,50],catch:90,xp:165,plan:"blob",pal:["#d9441a","#ffb347","#4a2a1a"],realm:1,pr:"mascot",
+    learn:[[1,"ember"],[1,"pebble"],[22,"flamejet"],[28,"rockslam"],[36,"inferno"]]},
+  {id:19,n:"Ashpup",t:["Fire"],st:[45,55,40,60],catch:190,xp:62,evo:{to:20,lv:24},plan:"quad",pal:["#8c8c8c","#ffd39a","#ff8a4c"],realm:1,pr:"pest",
+    learn:[[1,"tackle"],[4,"growl"],[9,"ember"],[16,"flamejet"]]},
+  {id:20,n:"Kilnhound",t:["Fire"],st:[72,85,60,85],catch:75,xp:170,plan:"quad",pal:["#5a5a5a","#ffc27a","#ff5a1a"],realm:1,pr:"pest",
+    learn:[[1,"ember"],[1,"scratch"],[24,"flamejet"],[30,"slam"],[38,"inferno"]]},
+  {id:21,n:"Rubblet",t:["Rock"],st:[50,52,70,30],catch:200,xp:60,evo:{to:22,lv:26},plan:"blob",pal:["#c9a66b","#e8d3a8","#5a4a3a"],realm:1,pr:"bruiser",
+    learn:[[1,"tackle"],[5,"harden"],[10,"pebble"],[18,"slam"]]},
+  {id:22,n:"Craglodon",t:["Rock"],st:[85,90,110,40],catch:70,xp:185,plan:"quad",pal:["#a0804a","#d8c398","#3a2a1a"],realm:1,pr:"bruiser",
+    learn:[[1,"pebble"],[1,"harden"],[26,"rockslam"],[34,"slam"],[42,"dragonsnap"]]},
+
+  // Tide Realm
+  {id:23,n:"Finlet",t:["Water"],st:[42,48,40,62],catch:200,xp:58,evo:{to:24,lv:22},plan:"serpent",pal:["#5ec8f2","#e4f6ff","#ff6b6b"],realm:2,pr:"pest",
+    learn:[[1,"tackle"],[5,"bubble"],[11,"growl"],[17,"waterjet"]]},
+  {id:24,n:"Marlance",t:["Water"],st:[68,88,62,92],catch:80,xp:168,plan:"serpent",pal:["#2d7fb3","#c7ebff","#ff3f3f"],realm:2,pr:"mascot",
+    learn:[[1,"bubble"],[1,"waterjet"],[22,"slam"],[30,"icelance"],[38,"tidalcrash"]]},
+  {id:25,n:"Frostkit",t:["Ice"],st:[44,46,42,60],catch:180,xp:60,evo:{to:26,lv:28},plan:"quad",pal:["#a8e6f0","#ffffff","#5ec8f2"],realm:2,pr:"cute",
+    learn:[[1,"scratch"],[5,"frostnip"],[12,"growl"],[20,"icelance"]]},
+  {id:26,n:"Glacielle",t:["Ice","Water"],st:[72,74,80,78],catch:70,xp:175,plan:"quad",pal:["#7fd1e6","#ffffff","#2186b8"],realm:2,pr:"cute",
+    learn:[[1,"frostnip"],[1,"bubble"],[28,"icelance"],[34,"waterjet"],[42,"tidalcrash"]]},
+  {id:27,n:"Bubblob",t:["Water"],st:[95,40,70,25],catch:160,xp:105,plan:"blob",pal:["#78d2f0","#eafbff","#2d7fb3"],realm:2,pr:"bruiser",
+    learn:[[1,"bubble"],[1,"harden"],[9,"tackle"],[17,"mend"],[25,"waterjet"],[33,"slam"]]},
+
+  // Storm Realm
+  {id:28,n:"Sparklet",t:["Electric"],st:[42,55,40,75],catch:170,xp:65,evo:{to:29,lv:26},plan:"bird",pal:["#f5e04c","#fffbd6","#5ec8f2"],realm:3,pr:"routebird",
+    learn:[[1,"tackle"],[6,"spark"],[12,"gust"],[19,"voltbolt"]]},
+  {id:29,n:"Voltern",t:["Electric","Flying"],st:[70,85,60,110],catch:70,xp:180,plan:"bird",pal:["#e6c400","#fff6b8","#2d7fb3"],realm:3,pr:"routebird",
+    learn:[[1,"spark"],[1,"gust"],[26,"voltbolt"],[32,"wingcut"],[40,"thunderclap"]]},
+  {id:30,n:"Zapmite",t:["Electric","Bug"],st:[55,70,50,88],catch:120,xp:130,plan:"bug",pal:["#d8e04c","#fff9c0","#7c6bff"],realm:3,pr:"earlybug",
+    learn:[[1,"nibble"],[1,"spark"],[14,"swarmbite"],[22,"voltbolt"],[30,"harden"]]},
+  {id:31,n:"Cloudrake",t:["Flying","Dragon"],st:[80,92,70,105],catch:35,xp:210,plan:"serpent",pal:["#dfe6ff","#ffffff","#7c6bff"],realm:3,pr:"latedragon",
+    learn:[[1,"gust"],[1,"dragonsnap"],[24,"wingcut"],[32,"slam"],[40,"dragonfury"]]},
+
+  // Dusk Realm
+  {id:32,n:"Wispling",t:["Ghost"],st:[40,55,40,70],catch:140,xp:70,evo:{to:33,lv:30},plan:"ghost",pal:["#9b7bff","#e6ddff","#ff7bd1"],realm:4,pr:"ghostlate",
+    learn:[[1,"haunt"],[8,"growl"],[16,"mindjab"],[24,"spectreclaw"]]},
+  {id:33,n:"Phantasm",t:["Ghost"],st:[68,95,65,100],catch:60,xp:190,plan:"ghost",pal:["#6f4fe0","#d9ccff","#ff3fb0"],realm:4,pr:"ghostlate",
+    learn:[[1,"haunt"],[1,"spectreclaw"],[30,"psywave"],[38,"slam"],[46,"dragonsnap"]]},
+  {id:34,n:"Mindmote",t:["Psychic"],st:[45,60,45,65],catch:140,xp:72,evo:{to:35,lv:30},plan:"blob",pal:["#ff7bd1","#ffe1f4","#7c6bff"],realm:4,pr:"ghostlate",
+    learn:[[1,"mindjab"],[8,"harden"],[16,"growl"],[24,"psywave"]]},
+  {id:35,n:"Psylith",t:["Psychic","Rock"],st:[75,98,85,70],catch:60,xp:195,plan:"blob",pal:["#e05cb3","#ffd1ee","#4a2a5a"],realm:4,pr:"ghostlate",
+    learn:[[1,"mindjab"],[1,"pebble"],[30,"psywave"],[36,"rockslam"],[44,"mend"]]},
+  {id:36,n:"Aetherion",t:["Dragon","Psychic"],st:[110,120,100,110],catch:5,xp:320,plan:"serpent",pal:["#8f7bff","#f0ecff","#3ddc84"],realm:4,pr:"legend",
+    learn:[[1,"dragonsnap"],[1,"psywave"],[1,"mend"],[50,"dragonfury"],[55,"thunderclap"]]},
+];
+const SPECIES_BY_ID = Object.fromEntries(SPECIES.map(s=>[s.id,s]));
+
+const PRINCIPLES = {
+  triangle:["Type triangle starters","Three partners in a rock-paper-scissors loop, each a three-stage line that finishes just past the midgame."],
+  earlybug:["Early bug, fast payoff","A weak insect in the first grass that evolves within a dozen levels, so the first evolution happens early."],
+  pest:["The regional pest","A common Normal-type on every early route; unremarkable alone, surprisingly strong fully grown."],
+  routebird:["The route bird","A Normal/Flying line found early, carried by many players to the end out of loyalty."],
+  bruiser:["Slow pure-type bruiser","High HP and defence, low speed: a wall that teaches the value of stats over flash."],
+  mascot:["Realm mascot","Each realm has one creature whose silhouette and typing say where you are."],
+  cute:["Cute now, fierce later","A small, round first stage that grows into something sharp."],
+  latedragon:["The rare late dragon","A scarce dual-type with a dragon half, hard to catch, worth the hunt."],
+  ghostlate:["The dark realm gates late","Ghosts and psychics live where you arrive last, so the type chart has a final twist."],
+  legend:["One legend at the end","A single guardian with the highest stats in the game, met once, at the furthest point."],
+};
+
+// Realm maps, 16x12. T/W/L/C/K walls, . path, G tall grass, H heal shrine,
+// S start, a/b/c gates, X the guardian's shrine.
+const REALMS = [
+  {n:"Verdant Realm",bg:"#0b2a16",wall:"#143d1f",path:"#3b4a2a",grass:"#2f7a3a",grass2:"#3a9447",
+   gates:{a:{to:1,ax:2,ay:7},b:{to:2,ax:2,ay:7}},
+   enc:[[10,3,2,5],[12,3,2,5],[14,2,3,6],[16,1,4,7],[11,.3,8,10]],
+   map:[
+    "TTTTTTTTTTTTTTTT",
+    "T..GGG....GGG..T",
+    "T.S.GG..H..GG..T",
+    "T....T....T....T",
+    "T.GGGT.TT.TGGG.T",
+    "T.GGG......GGG.T",
+    "TWWW...TT...WWWT",
+    "TWWW.GG..GG.WWWT",
+    "T....GGGGGG....T",
+    "T.T..........T.T",
+    "Ta.....TT.....bT",
+    "TTTTTTTTTTTTTTTT"]},
+  {n:"Ember Realm",bg:"#2a0f0b",wall:"#4a1a12",path:"#5a3a2a",grass:"#7a3a1f",grass2:"#9a4a22",
+   gates:{a:{to:0,ax:2,ay:10},b:{to:3,ax:2,ay:3}},
+   enc:[[17,3,9,13],[19,3,9,13],[21,2,10,14],[18,.3,16,18]],
+   map:[
+    "TTTTTTTTTTTTTTTT",
+    "TLL..GGG...LLLLT",
+    "TL...GGG.H...LLT",
+    "T..T......T....T",
+    "T.GGG.LL.GGGG..T",
+    "T.GGG.LL.GGGG..T",
+    "T.....LL.......T",
+    "Ta..GGG..GGG...T",
+    "T...GGG..GGG.T.T",
+    "TLL..........LLT",
+    "TLLL....b...LLLT",
+    "TTTTTTTTTTTTTTTT"]},
+  {n:"Tide Realm",bg:"#07192a",wall:"#0f2e4a",path:"#2a3a4a",grass:"#1f6a7a",grass2:"#268a9a",
+   gates:{a:{to:0,ax:13,ay:10},b:{to:3,ax:2,ay:7}},
+   enc:[[23,3,9,13],[25,2,10,14],[27,2,9,13],[24,.3,16,18]],
+   map:[
+    "TTTTTTTTTTTTTTTT",
+    "TWWWW.....WWWWWT",
+    "TWW..GGG.H..WWWT",
+    "TW...GGG.....WWT",
+    "T..GG.....GG...T",
+    "T..GG.WWW.GG...T",
+    "T.....WWW......T",
+    "Ta.GGG.....GGG.T",
+    "T..GGG..T..GGG.T",
+    "TWW.........WWWT",
+    "TWWWW...b..WWWWT",
+    "TTTTTTTTTTTTTTTT"]},
+  {n:"Storm Realm",bg:"#15172a",wall:"#2a2e4a",path:"#3a3f5a",grass:"#5a5a2a",grass2:"#7a7a30",
+   gates:{a:{to:1,ax:8,ay:9},b:{to:2,ax:8,ay:9},c:{to:4,ax:2,ay:7}},
+   enc:[[28,3,16,21],[30,2,16,20],[31,.4,20,24],[29,.3,24,27]],
+   map:[
+    "TTTTTTTTTTTTTTTT",
+    "TCCC..GG...CCCCT",
+    "TC....GG.H...CCT",
+    "Ta..GGG...GGG..T",
+    "T...GGG...GGG..T",
+    "TCC.....C......T",
+    "T....CC...GG.C.T",
+    "Tb..GGGG..GG...T",
+    "T...GGGG.......T",
+    "TC....CC....CCCT",
+    "TCCC....c...CCCT",
+    "TTTTTTTTTTTTTTTT"]},
+  {n:"Dusk Realm",bg:"#120a1e",wall:"#241438",path:"#2e2440",grass:"#4a2a6a",grass2:"#5e3a82",
+   gates:{a:{to:3,ax:8,ay:9}},
+   enc:[[32,3,22,28],[34,3,22,28],[33,.5,30,33],[35,.5,30,33]],
+   map:[
+    "TTTTTTTTTTTTTTTT",
+    "TKKK...GG...KKKT",
+    "TK.....GG.H...KT",
+    "T..GGG.....GGG.T",
+    "T..GGG..K..GGG.T",
+    "TK.....KKK.....T",
+    "T..GG...K...GG.T",
+    "Ta.GG.......GG.T",
+    "T....GGGGGG....T",
+    "TK....GGGG....KT",
+    "TKKK....X...KKKT",
+    "TTTTTTTTTTTTTTTT"]},
+];
+const WALLS = new Set(["T","W","L","C","K"]);
+const STARTERS = [1,4,7];
+
+
+// ---- sprites.js ----
+/* Procedural pixel sprites. Each species is drawn from a body plan on a
+   32x32 grid, mirrored for symmetry, then coloured with a 3-tone palette
+   plus outline and shading. Details (spots, horns, crest size) come from a
+   seeded RNG so every species looks fixed and distinct between loads.
+   Not hand-drawn art; a deliberate, consistent pixel style instead. */
+
+const SPR = 32;
+
+function hashStr(s){ let h=2166136261; for(const c of s){ h^=c.charCodeAt(0); h=Math.imul(h,16777619); } return h>>>0; }
+function rng(seed){ let a=seed>>>0; return ()=>{ a=(a+0x6D2B79F5)>>>0; let t=a; t=Math.imul(t^(t>>>15),t|1); t^=t+Math.imul(t^(t>>>7),t|61); return ((t^(t>>>14))>>>0)/4294967296; }; }
+
+function hexToRgb(h){ const n=parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; }
+function shade(h,f){ const [r,g,b]=hexToRgb(h); const k=v=>Math.max(0,Math.min(255,Math.round(v*f))); return `rgb(${k(r)},${k(g)},${k(b)})`; }
+
+// mask helpers on a Uint8Array grid: value = layer (1 main, 2 belly, 3 accent)
+function makeGrid(){ return new Uint8Array(SPR*SPR); }
+function ell(g,cx,cy,rx,ry,v){ for(let y=0;y<SPR;y++)for(let x=0;x<SPR;x++){ const dx=(x+.5-cx)/rx, dy=(y+.5-cy)/ry; if(dx*dx+dy*dy<=1) g[y*SPR+x]=v; } }
+function rect(g,x0,y0,w,h,v){ for(let y=y0;y<y0+h;y++)for(let x=x0;x<x0+w;x++) if(x>=0&&y>=0&&x<SPR&&y<SPR) g[y*SPR+x]=v; }
+function mirror(g){ for(let y=0;y<SPR;y++)for(let x=0;x<SPR/2;x++){ const v=g[y*SPR+x]; g[y*SPR+(SPR-1-x)]=v; } }
+
+const PLANS = {
+  quad(g,r,s){ // body, head to the left, four legs, tail
+    const bw=9+s*2, bh=6+s;
+    ell(g,18,20,bw,bh,1); ell(g,9,15,5+s,5+s,1);            // body, head
+    ell(g,18,21,bw-3,bh-3,2);                                 // belly
+    for(const lx of [12,16,21,25]) rect(g,lx,24,3,5,1);       // legs
+    rect(g,26,16,4,2,1); rect(g,29,13,2,4,1);                 // tail
+    ell(g,7,13,1.3,1.3,3); if(r()>.4) ell(g,9,9,2+s*.5,2,3);  // eye, crest
+    if(r()>.5) for(let i=0;i<3+s;i++) ell(g,14+i*3,18+(i%2)*2,1.2,1.2,3); // spots
+  },
+  biped(g,r,s){ // upright, big head, arms, tail
+    ell(g,16,13,6+s,6+s,1); ell(g,16,22,6+s,7+s,1);           // head, body
+    ell(g,16,24,4+s,4+s,2);                                   // belly
+    rect(g,9-s,19,3,6,1); rect(g,20+s,19,3,6,1);              // arms
+    rect(g,12,28,3,4,1); rect(g,17,28,3,4,1);                 // legs
+    rect(g,22+s,25,5,2,1); rect(g,26+s,22,2,4,3);             // tail + flame tip
+    ell(g,13,12,1.3,1.3,3); ell(g,19,12,1.3,1.3,3);           // eyes
+    if(r()>.3){ rect(g,11,6-s,2,4,3); rect(g,19,6-s,2,4,3); } // horns
+  },
+  serpent(g,r,s){ // long body coiling, head raised, small wings
+    for(let i=0;i<7;i++){ const x=26-i*3, y=24-Math.abs(i-3)*2; ell(g,x,y,3.5+s*.4,3.5+s*.4,1); }
+    ell(g,8,10,5+s,4.5+s,1); ell(g,8,12,3,2,2);               // head, chin
+    ell(g,6,9,1.2,1.2,3);                                     // eye
+    rect(g,16,8-s,2,8,3); rect(g,20,9-s,2,7,3);               // wing/fin spikes
+    for(let i=0;i<4;i++) ell(g,14+i*3,24,1.2,1.2,3);          // belly accents
+  },
+  bird(g,r,s){ // round body, wing, beak, tail feathers
+    ell(g,15,18,8+s,7+s,1); ell(g,11,10,4.5+s*.5,4+s*.5,1);   // body, head
+    ell(g,17,20,5+s,4,2);                                     // breast
+    ell(g,20,17,5,3,3);                                       // wing
+    rect(g,5,10,3,2,3);                                       // beak
+    ell(g,10,9,1.1,1.1,3);                                    // eye
+    rect(g,24,13,5,2,3); rect(g,26,10,2,4,3);                 // tail
+    rect(g,12,25,2,4,3); rect(g,17,25,2,4,3);                 // legs
+  },
+  blob(g,r,s){ // dome with face, flat bottom
+    ell(g,16,19,10+s,9+s,1); rect(g,6-s,19,20+2*s,8,1);
+    ell(g,16,24,7+s,3,2);                                     // base shade
+    ell(g,12,16,1.5,1.5,3); ell(g,20,16,1.5,1.5,3);           // eyes
+    if(r()>.5) for(let i=0;i<4;i++) rect(g,8+i*5,10-(i%2)*2,2,3,3); // bumps
+    if(r()>.5) ell(g,16,20,2,1,3);                            // mouth
+  },
+  bug(g,r,s){ // segmented body, legs, antennae
+    ell(g,10,14,4+s*.5,4+s*.5,1); ell(g,17,17,5+s,5+s,1); ell(g,24,19,4+s,4+s,1);
+    ell(g,17,18,3+s,3,2);
+    for(let i=0;i<3;i++){ rect(g,12+i*5,22,2,5,1); }          // legs
+    rect(g,7,9,1,4,3); rect(g,11,8,1,5,3);                    // antennae
+    ell(g,8,13,1.1,1.1,3);
+    if(s>0){ ell(g,17,11,6,3,3); }                            // wings
+  },
+  ghost(g,r,s){ // floating sheet with wavy bottom, no legs
+    ell(g,16,14,8+s,9+s,1);
+    for(let i=0;i<5;i++) ell(g,8+i*4,23,2.2,3,1);             // wavy hem
+    ell(g,12,13,1.6,2,3); ell(g,20,13,1.6,2,3);               // eyes
+    ell(g,16,17,2,1.2,2);                                     // mouth
+    if(r()>.5){ rect(g,4,10,3,2,3); rect(g,25,10,3,2,3); }    // wisps
+  },
+  turtle(g,r,s){ // shell dome, head out, stubby legs
+    ell(g,17,17,9+s,7+s,3);                                   // shell (accent)
+    ell(g,17,17,7+s,5+s,1);                                   // shell pattern
+    ell(g,7,15,4+s*.5,4,1); ell(g,7,16,2.5,2,2);              // head
+    for(const lx of [11,22]) rect(g,lx,23,4,4,1);             // legs
+    rect(g,27+s,19,3,2,1);                                    // tail
+    ell(g,6,14,1.1,1.1,3);
+    for(let i=0;i<3;i++) ell(g,13+i*4,16,1.5,1.5,2);          // shell scutes
+  },
+};
+
+const spriteCache = new Map();
+/** Render species to a canvas (96x96, pixelated). Cached per species+facing. */
+function spriteFor(sp, facing="front"){
+  const key=sp.id+":"+facing;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  const g=makeGrid();
+  const r=rng(hashStr(sp.n));
+  const stage=sp.evo?0:(SPECIES.some(o=>o.evo&&o.evo.to===sp.id)?1:0);
+  const s=Math.min(2, stage + (sp.st.reduce((a,b)=>a+b,0)>300?1:0));
+  (PLANS[sp.plan]||PLANS.blob)(g,r,s);
+  mirror(g);
+
+  const c=document.createElement("canvas"); c.width=c.height=96;
+  const ctx=c.getContext("2d");
+  const [main,belly,acc]=sp.pal;
+  const cols={1:main,2:belly,3:acc};
+  const dark=shade(main,.55), outline=shade(main,.3);
+  const px=3;
+  // shading: lower-right quadrant darker
+  for(let y=0;y<SPR;y++)for(let x=0;x<SPR;x++){
+    const v=g[y*SPR+x]; if(!v) continue;
+    const edge=[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dy])=>{const nx=x+dx,ny=y+dy; return nx<0||ny<0||nx>=SPR||ny>=SPR||!g[ny*SPR+nx];});
+    let col = edge ? outline : cols[v];
+    if(!edge && v===1 && (x+y)>SPR+6) col=dark;
+    ctx.fillStyle=col;
+    const dx = facing==="back" ? (SPR-1-x) : x;
+    ctx.fillRect(dx*px,y*px,px,px);
+  }
+  spriteCache.set(key,c);
+  return c;
+}
+function drawSprite(canvas, sp, facing){
+  const ctx=canvas.getContext("2d"); ctx.imageSmoothingEnabled=false;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(spriteFor(sp,facing),0,0,canvas.width,canvas.height);
+}
+
+
+// ---- engine.js ----
+/* Game rules. No DOM in here; ui.js renders what this produces. */
+
+const DEFAULT_HACK = () => ({name:"Base game",sp:{},wildLv:1,catchX:1,xpX:1,builtin:true});
+const HARD_HACK = () => ({name:"Hard Mode",sp:{},wildLv:1.25,catchX:.7,xpX:.9,builtin:true});
+
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v);}catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); return true;}catch(e){ return false; } },
+  del(k){ try{ localStorage.removeItem(k);}catch(e){} },
+};
+
+// ---------- hacks ----------
+function loadHacks(){
+  const h=store.get("realms.hacks",null);
+  if(h && Array.isArray(h) && h.length) return h;
+  return [DEFAULT_HACK(),HARD_HACK()];
+}
+let HACKS = loadHacks();
+let ACTIVE_HACK = Math.min(store.get("realms.hack.active",0), HACKS.length-1);
+function saveHacks(){ store.set("realms.hacks",HACKS); store.set("realms.hack.active",ACTIVE_HACK); }
+function activeHack(){ return (G && G.hack) ? G.hack : HACKS[ACTIVE_HACK]; }
+
+/** Species with the active hack's overrides applied. */
+function getSpecies(id){
+  const base=SPECIES_BY_ID[id]; const o=(activeHack().sp||{})[id];
+  if(!o) return base;
+  const s={...base};
+  if(o.st) s.st=o.st.slice();
+  if(o.t) s.t=o.t.slice();
+  if(o.evo!==undefined) s.evo = o.evo===null ? undefined : {to:(base.evo||{}).to||o.evo.to, lv:o.evo.lv};
+  return s;
+}
+
+// ---------- creatures ----------
+function xpForLevel(lv){ return lv*lv*lv; }
+function calcStats(mon){
+  const sp=getSpecies(mon.sid), [bh,ba,bd,bs]=sp.st, L=mon.lv;
+  return { hp:Math.floor(bh*2*L/100)+L+10, atk:Math.floor(ba*2*L/100)+5, def:Math.floor(bd*2*L/100)+5, spd:Math.floor(bs*2*L/100)+5 };
+}
+function movesAtLevel(sp, lv){ return sp.learn.filter(([l])=>l<=lv).map(([,m])=>m).filter((m,i,a)=>a.indexOf(m)===i).slice(-4); }
+function makeMon(sid, lv){
+  const sp=getSpecies(sid);
+  const m={sid,lv,xp:xpForLevel(lv),moves:movesAtLevel(sp,lv),hp:0,uid:Math.random().toString(36).slice(2,9)};
+  m.hp=calcStats(m).hp; return m;
+}
+function monName(m){ return getSpecies(m.sid).n; }
+
+/** Apply xp; returns a list of events for the UI to narrate. */
+function gainXp(m, amount){
+  const ev=[]; m.xp+=amount;
+  while(m.lv<100 && m.xp>=xpForLevel(m.lv+1)){
+    const before=calcStats(m).hp; m.lv++; const after=calcStats(m).hp; m.hp=Math.min(after, m.hp+(after-before));
+    ev.push({k:"level",lv:m.lv});
+    const sp=getSpecies(m.sid);
+    for(const [l,mv] of sp.learn) if(l===m.lv && !m.moves.includes(mv)){
+      if(m.moves.length<4) m.moves.push(mv); else { m.moves.shift(); m.moves.push(mv); }
+      ev.push({k:"learn",move:mv});
+    }
+    if(sp.evo && m.lv>=sp.evo.lv){
+      const from=sp.n; m.sid=sp.evo.to; const nsp=getSpecies(m.sid);
+      const hpNow=calcStats(m).hp; m.hp=Math.min(hpNow, m.hp+8);
+      ev.push({k:"evolve",from,to:nsp.n});
+      G.seen[m.sid]=1; G.caught[m.sid]=1;
+    }
+  }
+  return ev;
+}
+
+// ---------- world ----------
+let G=null;
+function newGame(starterId){
+  G={ realm:0, x:2, y:2, party:[makeMon(starterId,5)], box:[], orbs:8, tonics:3, seen:{}, caught:{}, steps:0,
+      shrineDone:false, hack:JSON.parse(JSON.stringify(HACKS[ACTIVE_HACK])), started:Date.now() };
+  G.seen[starterId]=1; G.caught[starterId]=1; STARTERS.forEach(s=>G.seen[s]=1);
+  return G;
+}
+function tileAt(rx,x,y){ const r=REALMS[rx]; const row=r.map[y]; return row?row[x]:"T"; }
+function walkable(rx,x,y){ const t=tileAt(rx,x,y); return !WALLS.has(t); }
+function lead(){ return G.party.find(m=>m.hp>0) || G.party[0]; }
+function allFainted(){ return G.party.every(m=>m.hp<=0); }
+
+/** Move the player. Returns an event object or null. */
+function stepPlayer(dir){
+  const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[dir]; if(!d) return null;
+  const nx=G.x+d[0], ny=G.y+d[1];
+  if(!walkable(G.realm,nx,ny)) return {k:"bump"};
+  G.x=nx; G.y=ny; G.steps++;
+  const t=tileAt(G.realm,nx,ny);
+  const realm=REALMS[G.realm];
+  if(t==="H"){ G.party.forEach(m=>{ m.hp=calcStats(m).hp; }); return {k:"heal"}; }
+  if(realm.gates[t]){ const g=realm.gates[t]; G.realm=g.to; G.x=g.ax; G.y=g.ay; return {k:"gate",realm:REALMS[g.to].n}; }
+  if(t==="X" && !G.shrineDone){ return {k:"shrine"}; }
+  if(t==="G" && Math.random()<0.14){ return {k:"encounter",foe:rollEncounter(realm)}; }
+  return null;
+}
+function rollEncounter(realm){
+  const tot=realm.enc.reduce((a,e)=>a+e[1],0); let r=Math.random()*tot;
+  for(const [id,w,lo,hi] of realm.enc){ r-=w; if(r<=0){ const lv=Math.max(1,Math.round((lo+Math.random()*(hi-lo))*activeHack().wildLv)); G.seen[id]=1; return makeMon(id,lv); } }
+  const [id,,lo]=realm.enc[0]; G.seen[id]=1; return makeMon(id,lo);
+}
+
+// ---------- battle ----------
+let B=null;
+function startBattle(foe, opts={}){
+  B={foe, allyIdx:G.party.indexOf(lead()), st:{ally:{atk:0,def:0},foe:{atk:0,def:0}}, over:false, result:null, legend:!!opts.legend, log:[]};
+  return B;
+}
+function ally(){ return G.party[B.allyIdx]; }
+function stageMult(n){ return n>=0 ? (2+n)/2 : 2/(2-n); }
+function dmg(att, def, move, attSt, defSt){
+  const mv=MOVES[move]; if(!mv.p) return {d:0,eff:1,crit:false};
+  const asp=getSpecies(att.sid), dsp=getSpecies(def.sid), as=calcStats(att), ds=calcStats(def);
+  const A=as.atk*stageMult(attSt.atk), D=Math.max(1,ds.def*stageMult(defSt.def));
+  const stab=asp.t.includes(mv.t)?1.5:1, eff=effectiveness(mv.t,dsp.t), crit=Math.random()<1/16;
+  const base=((2*att.lv/5+2)*mv.p*A/D)/50+2;
+  const d=Math.max(eff>0?1:0, Math.floor(base*stab*eff*(crit?1.5:1)*(0.85+Math.random()*0.15)));
+  return {d,eff,crit};
+}
+function useMove(user, target, move, uSt, tSt, who){
+  const mv=MOVES[move]; const lines=[`${monName(user)} used ${mv.n}!`];
+  if(Math.random()*100>mv.a){ lines.push("It missed!"); return lines; }
+  if(mv.p){
+    const {d,eff,crit}=dmg(user,target,move,uSt,tSt); target.hp=Math.max(0,target.hp-d);
+    if(eff===0) lines.push("It had no effect."); else if(eff>1) lines.push("It's super effective!"); else if(eff<1) lines.push("It's not very effective.");
+    if(crit && eff>0) lines.push("A critical hit!");
+  } else if(mv.fx){
+    if(mv.fx.heal){ const mx=calcStats(user).hp; const h=Math.floor(mx*mv.fx.heal); user.hp=Math.min(mx,user.hp+h); lines.push(`${monName(user)} recovered ${h} HP.`); }
+    if(mv.fx.stat){ const tgt=mv.fx.who==="self"?uSt:tSt; const name=mv.fx.who==="self"?monName(user):monName(target); tgt[mv.fx.stat]=Math.max(-4,Math.min(4,tgt[mv.fx.stat]+mv.fx.d)); lines.push(`${name}'s ${mv.fx.stat==="atk"?"attack":"defence"} ${mv.fx.d>0?"rose":"fell"}.`); }
+  }
+  return lines;
+}
+function foeMove(){ const f=B.foe; return f.moves[Math.floor(Math.random()*f.moves.length)]; }
+
+/** One battle round. action: {k:"move",move}|{k:"catch"}|{k:"swap",idx}|{k:"run"}|{k:"tonic"} */
+function battleRound(action){
+  const out={lines:[],events:[]}; if(B.over) return out;
+  const a=ally(), f=B.foe;
+  let allyActs=true;
+  if(action.k==="run"){
+    if(B.legend){ out.lines.push("The guardian blocks the way out."); allyActs=false; }
+    else if(Math.random()<0.7+ (calcStats(a).spd>calcStats(f).spd?0.25:0)){ out.lines.push("Got away safely."); B.over=true; B.result="ran"; return out; }
+    else { out.lines.push("Couldn't escape!"); allyActs=false; }
+  }
+  if(action.k==="catch"){
+    if(G.orbs<=0){ out.lines.push("No orbs left."); return out; }
+    G.orbs--; const sp=getSpecies(f.sid); const mx=calcStats(f).hp;
+    const p=Math.min(.95, (sp.catch/255)*(1-(f.hp/mx)*0.7)*activeHack().catchX*1.2 + 0.03);
+    out.lines.push(`Threw an orb at ${sp.n}...`);
+    if(Math.random()<p){ out.lines.push(`${sp.n} was caught!`); G.caught[f.sid]=1; f.hp=Math.max(1,f.hp); if(G.party.length<6) G.party.push(f); else G.box.push(f);
+      B.over=true; B.result="caught"; out.events.push({k:"caught",where:G.party.includes(f)?"party":"box"}); return out; }
+    out.lines.push("It broke free!"); allyActs=false;
+  }
+  if(action.k==="tonic"){
+    if(G.tonics<=0){ out.lines.push("No tonics left."); return out; }
+    G.tonics--; const mx=calcStats(a).hp; const h=Math.floor(mx*.5); a.hp=Math.min(mx,a.hp+h); out.lines.push(`${monName(a)} drank a tonic and recovered ${h} HP.`); allyActs=false;
+  }
+  if(action.k==="swap"){
+    const m=G.party[action.idx]; if(!m||m.hp<=0||action.idx===B.allyIdx){ out.lines.push("That one can't fight right now."); return out; }
+    B.allyIdx=action.idx; B.st.ally={atk:0,def:0}; out.lines.push(`Go, ${monName(m)}!`); allyActs=false;
+  }
+  const a2=ally();
+  const first = allyActs && (calcStats(a2).spd>=calcStats(f).spd);
+  const doAlly=()=>{ if(allyActs && action.k==="move") out.lines.push(...useMove(a2,f,action.move,B.st.ally,B.st.foe,"ally")); };
+  const doFoe=()=>{ if(f.hp>0) out.lines.push(...useMove(f,a2,foeMove(),B.st.foe,B.st.ally,"foe")); };
+  if(first){ doAlly(); if(f.hp>0) doFoe(); } else { doFoe(); if(a2.hp>0) doAlly(); }
+
+  if(f.hp<=0){
+    out.lines.push(`${monName(f)} fainted.`);
+    const xp=Math.floor(getSpecies(f.sid).xp*f.lv/7*activeHack().xpX)+1;
+    out.lines.push(`${monName(a2)} gained ${xp} XP.`);
+    for(const e of gainXp(a2,xp)){
+      if(e.k==="level") out.lines.push(`${monName(a2)} grew to level ${e.lv}!`);
+      if(e.k==="learn") out.lines.push(`${monName(a2)} learned ${MOVES[e.move].n}!`);
+      if(e.k==="evolve") out.lines.push(`${e.from} evolved into ${e.to}!`);
+      out.events.push(e);
+    }
+    if(B.legend){ G.shrineDone=true; }
+    B.over=true; B.result="won"; return out;
+  }
+  if(a2.hp<=0){
+    out.lines.push(`${monName(a2)} fainted!`);
+    if(allFainted()){ out.lines.push("Everyone is out. You hurry back to the shrine."); B.over=true; B.result="lost"; out.events.push({k:"wipe"}); }
+    else { out.events.push({k:"needswap"}); }
+  }
+  return out;
+}
+function wipeToShrine(){
+  const r=REALMS[G.realm]; for(let y=0;y<r.map.length;y++){ const x=r.map[y].indexOf("H"); if(x>=0){ G.x=x; G.y=y; break; } }
+  G.party.forEach(m=>{ m.hp=calcStats(m).hp; });
+}
+
+// ---------- saves ----------
+function serialize(){ return JSON.stringify({v:1,saved:Date.now(),G}); }
+function deserialize(txt){
+  const o=JSON.parse(txt); if(!o||o.v!==1||!o.G||!Array.isArray(o.G.party)) throw new Error("Not a valid Emerald Realms save.");
+  G=o.G; if(!G.hack) G.hack=DEFAULT_HACK(); return G;
+}
+function slotKey(n){ return "realms.slot."+n; }
+function saveSlot(n){ return store.set(slotKey(n), {saved:Date.now(),txt:serialize()}); }
+function loadSlot(n){ const s=store.get(slotKey(n),null); if(!s) return null; return deserialize(s.txt); }
+function slotInfo(n){ const s=store.get(slotKey(n),null); if(!s) return null; try{ const o=JSON.parse(s.txt); const g=o.G; return {saved:s.saved, realm:REALMS[g.realm].n, lead:monName(g.party[0]), lv:g.party[0].lv, n:g.party.length+g.box.length, caught:Object.keys(g.caught).length, hack:(g.hack||{}).name, txt:s.txt}; }catch(e){ return null; } }
+function copySlot(a,b){ const s=store.get(slotKey(a),null); if(!s) return false; return store.set(slotKey(b),s); }
+function deleteSlot(n){ store.del(slotKey(n)); }
+
+
+// ---- ui.js ----
+/* Screens, input, rendering, boot. */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const el={ map:$("#map"), log:$("#world-log"), blog:$("#battle-log"), bmenu:$("#battle-menu") };
+let toastT=null;
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2200); }
+function confirmBox(text){ return new Promise(res=>{ const m=$("#modal"); $("#modal-text").textContent=text; m.hidden=false;
+  const done=v=>{ m.hidden=true; $("#modal-yes").onclick=null; $("#modal-no").onclick=null; res(v); };
+  $("#modal-yes").onclick=()=>done(true); $("#modal-no").onclick=()=>done(false); }); }
+function typeChips(types){ return types.map(t=>`<span class="type" style="--t:${TYPE_COLOR[t]}">${t}</span>`).join(""); }
+function hpClass(m){ const r=m.hp/calcStats(m).hp; return r<.25?"low":r<.5?"mid":""; }
+
+// ---------- tabs & screens ----------
+function showTab(id){
+  $$(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===id)));
+  $$(".panel").forEach(p=>p.hidden=(p.id!=="tab-"+id));
+  if(id==="party") renderParty(); if(id==="codex") renderCodex(); if(id==="hacks") renderHacks(); if(id==="saves") renderSlots();
+  if(location.hash!=="#"+id) history.replaceState(null,"","#"+id);
+}
+function showScreen(id){ $$("#tab-play .screen").forEach(s=>s.hidden=(s.id!=="screen-"+id)); }
+
+// ---------- title / starter ----------
+function renderTitle(){
+  const any=[1,2,3].some(n=>slotInfo(n));
+  $("#btn-continue").hidden=!any;
+  $("#title-hint").textContent = any ? "Continue loads your most recent slot. Slots, copies and transfers are under Saves." : "Saves live in this browser. Copy a save's text under Saves to keep it anywhere.";
+}
+function renderStarters(){
+  const box=$("#starters"); box.innerHTML="";
+  for(const id of STARTERS){ const sp=getSpecies(id); const b=document.createElement("button"); b.className="starter";
+    b.innerHTML=`<canvas width="96" height="96"></canvas><div class="n">${sp.n}</div><div class="t">${typeChips(sp.t)}</div>`;
+    drawSprite(b.querySelector("canvas"),sp,"front");
+    b.onclick=()=>{ newGame(id); toast(`${sp.n} joins you.`); enterWorld(`You and ${sp.n} set out into the ${REALMS[0].n}.`); };
+    box.appendChild(b); }
+}
+
+// ---------- world ----------
+const TILE=32;
+function enterWorld(msg){ showScreen("world"); drawMap(); $("#realm-name").textContent=REALMS[G.realm].n; if(msg) el.log.textContent=msg; }
+function drawMap(){
+  const ctx=el.map.getContext("2d"); const r=REALMS[G.realm];
+  ctx.fillStyle=r.bg; ctx.fillRect(0,0,el.map.width,el.map.height);
+  for(let y=0;y<r.map.length;y++)for(let x=0;x<16;x++){
+    const t=r.map[y][x]; const px=x*TILE, py=y*TILE;
+    if(WALLS.has(t)){ ctx.fillStyle=r.wall; ctx.fillRect(px,py,TILE,TILE); ctx.fillStyle="rgba(0,0,0,.25)"; ctx.fillRect(px+4,py+4,TILE-8,TILE-8); }
+    else if(t==="G"){ ctx.fillStyle=r.grass; ctx.fillRect(px,py,TILE,TILE); ctx.fillStyle=r.grass2; for(let i=0;i<4;i++){ ctx.fillRect(px+4+(i%2)*14,py+6+Math.floor(i/2)*12,4,8); } }
+    else { ctx.fillStyle=r.path; ctx.fillRect(px,py,TILE,TILE); }
+    if(t==="H"){ ctx.fillStyle="#3ddc84"; ctx.fillRect(px+8,py+8,16,16); ctx.fillStyle="#e6f2ea"; ctx.fillRect(px+14,py+6,4,20); ctx.fillRect(px+6,py+14,20,4); }
+    if(r.gates[t]){ ctx.fillStyle="#f5b942"; ctx.fillRect(px+6,py+6,20,20); ctx.fillStyle=r.bg; ctx.fillRect(px+11,py+11,10,10); }
+    if(t==="X"){ ctx.fillStyle=G.shrineDone?"#5a7f6a":"#9b7bff"; ctx.beginPath(); ctx.moveTo(px+16,py+4); ctx.lineTo(px+28,py+28); ctx.lineTo(px+4,py+28); ctx.closePath(); ctx.fill(); }
+  }
+  // player
+  const px=G.x*TILE, py=G.y*TILE; ctx.fillStyle="#04150c"; ctx.fillRect(px+9,py+5,14,22);
+  ctx.fillStyle="#3ddc84"; ctx.fillRect(px+10,py+6,12,20); ctx.fillStyle="#f5b942"; ctx.fillRect(px+10,py+6,12,7); ctx.fillStyle="#04150c"; ctx.fillRect(px+13,py+9,2,2); ctx.fillRect(px+17,py+9,2,2);
+}
+function handleMove(dir){
+  if(B&&!B.over) return; if(!G) return;
+  const ev=stepPlayer(dir); drawMap();
+  if(!ev) return;
+  if(ev.k==="heal"){ el.log.textContent="The shrine restores your party."; toast("Party healed"); }
+  else if(ev.k==="gate"){ $("#realm-name").textContent=ev.realm; el.log.textContent=`You step through into the ${ev.realm}.`; toast(ev.realm); }
+  else if(ev.k==="shrine"){ el.log.textContent="Something ancient stirs at the shrine..."; beginBattle(makeMon(36,50),{legend:true}); }
+  else if(ev.k==="encounter"){ beginBattle(ev.foe); }
+}
+function bindInput(){
+  document.addEventListener("keydown",e=>{
+    const k={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"}[e.key];
+    if(k && !$("#screen-world").hidden && !$("#tab-play").hidden){ e.preventDefault(); handleMove(k); }
+  });
+  $$(".dpad button").forEach(b=>b.addEventListener("click",()=>handleMove(b.dataset.dir)));
+}
+
+// ---------- battle ----------
+let battleBusy=false;
+function beginBattle(foe,opts){
+  startBattle(foe,opts); showScreen("battle");
+  const fsp=getSpecies(foe.sid);
+  el.blog.textContent = opts&&opts.legend ? `${fsp.n}, guardian of the realms, descends!` : `A wild ${fsp.n} appears!`;
+  renderBattle(); renderBattleMenu("main");
+}
+function renderBattle(){
+  const a=ally(), f=B.foe, asp=getSpecies(a.sid), fsp=getSpecies(f.sid);
+  drawSprite($("#foe-sprite"),fsp,"front"); drawSprite($("#ally-sprite"),asp,"back");
+  $("#foe-name").textContent=fsp.n; $("#foe-lv").textContent="Lv "+f.lv;
+  $("#ally-name").textContent=asp.n; $("#ally-lv").textContent="Lv "+a.lv;
+  const fh=$("#foe-hp"); fh.style.width=(100*f.hp/calcStats(f).hp)+"%"; fh.className="hp "+hpClass(f);
+  const ah=$("#ally-hp"); const amx=calcStats(a).hp; ah.style.width=(100*a.hp/amx)+"%"; ah.className="hp "+hpClass(a);
+  $("#ally-hptext").textContent=`${a.hp} / ${amx}`;
+  const lo=xpForLevel(a.lv), hi=xpForLevel(a.lv+1); $("#ally-xp").style.width=(100*(a.xp-lo)/(hi-lo))+"%";
+}
+function renderBattleMenu(mode){
+  const m=el.bmenu; m.innerHTML="";
+  const add=(label,sub,fn,type)=>{ const b=document.createElement("button"); b.innerHTML=`${label}${sub?`<small>${sub}</small>`:""}`; if(type){ b.classList.add("t"); b.style.setProperty("--t",TYPE_COLOR[type]); } b.onclick=fn; m.appendChild(b); return b; };
+  if(B.over){ add("Continue","back to the realm",endBattle); return; }
+  if(mode==="main"){
+    add("Fight","choose a move",()=>renderBattleMenu("fight"));
+    add("Catch",`${G.orbs} orbs`,()=>act({k:"catch"}));
+    add("Swap","switch creature",()=>renderBattleMenu("swap"));
+    add("Tonic",`${G.tonics} left · heals half`,()=>act({k:"tonic"}));
+    add("Run", B.legend?"not from a guardian":"leave the fight",()=>act({k:"run"}));
+  } else if(mode==="fight"){
+    for(const mv of ally().moves){ const d=MOVES[mv]; add(d.n,`${d.t} · ${d.p?d.p+" power":"status"} · ${d.a}%`,()=>act({k:"move",move:mv}),d.t); }
+    add("Back","",()=>renderBattleMenu("main"));
+  } else if(mode==="swap"){
+    G.party.forEach((p,i)=>{ const sp=getSpecies(p.sid); const b=add(sp.n,`Lv ${p.lv} · ${p.hp}/${calcStats(p).hp} HP`,()=>act({k:"swap",idx:i})); if(p.hp<=0||i===B.allyIdx) b.disabled=true; });
+    add("Back","",()=>renderBattleMenu("main"));
+  }
+}
+async function act(action){
+  if(battleBusy||B.over) return; battleBusy=true;
+  const out=battleRound(action);
+  for(const line of out.lines){ el.blog.textContent=line; renderBattle(); await sleep(520); }
+  battleBusy=false;
+  if(out.events.some(e=>e.k==="needswap")){ el.blog.textContent+=" Choose another."; renderBattleMenu("swap"); $$("#battle-menu button").pop().hidden=true; return; }
+  if(B.over){ renderBattleMenu("main"); return; }
+  renderBattleMenu("main");
+}
+function endBattle(){
+  const res=B.result; B=null;
+  if(res==="lost"){ wipeToShrine(); enterWorld("You wake at the shrine, party restored."); }
+  else enterWorld(res==="caught"?"A new creature joins you.":res==="won"?"You won the fight.":"Back on the path.");
+  if(G.shrineDone) drawMap();
+}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+// ---------- party / codex ----------
+function monCard(m,i,where){
+  const sp=getSpecies(m.sid); const b=document.createElement("button"); b.className="mon"+(where==="party"&&i===0?" lead":"");
+  b.innerHTML=`<canvas width="48" height="48"></canvas><div><div class="n">${sp.n}</div><div class="d">Lv ${m.lv} · ${m.hp}/${calcStats(m).hp} HP</div><div class="d">${typeChips(sp.t)}</div></div>`;
+  drawSprite(b.querySelector("canvas"),sp,"front");
+  b.onclick=()=>{ if(where==="party"){ if(i>0){ const [x]=G.party.splice(i,1); G.party.unshift(x); toast(`${sp.n} leads.`); } }
+    else { if(G.party.length<6){ const [x]=G.box.splice(i,1); G.party.push(x); toast(`${sp.n} joins the party.`); } else toast("Party is full. Send one to the box first."); }
+    renderParty(); };
+  return b;
+}
+function renderParty(){
+  const pg=$("#party-grid"), bg=$("#box-grid"); pg.innerHTML=""; bg.innerHTML="";
+  if(!G){ pg.innerHTML='<p class="muted">Start a journey first.</p>'; return; }
+  G.party.forEach((m,i)=>{ const c=monCard(m,i,"party"); if(G.party.length>1){ const s=document.createElement("button"); s.className="btn"; s.textContent="→ box"; s.style.minHeight="32px"; s.style.padding=".2rem .5rem"; s.style.fontSize=".7rem"; s.onclick=e=>{ e.stopPropagation(); const [x]=G.party.splice(i,1); G.box.push(x); renderParty(); }; c.appendChild(s);} pg.appendChild(c); });
+  G.box.forEach((m,i)=>bg.appendChild(monCard(m,i,"box")));
+  if(!G.box.length) bg.innerHTML='<p class="muted">Empty.</p>';
+}
+function renderCodex(){
+  const grid=$("#codex-grid"); grid.innerHTML="";
+  const seen=G?G.seen:{}, caught=G?G.caught:{};
+  let nS=0,nC=0;
+  for(const base of SPECIES){ const sp=getSpecies(base.id); const known=!!seen[sp.id]; const got=!!caught[sp.id]; if(known)nS++; if(got)nC++;
+    const d=document.createElement("div"); d.className="mon"+(known?"":" unknown");
+    const pr=PRINCIPLES[sp.pr]||["",""];
+    d.innerHTML=`<canvas width="48" height="48"></canvas><div><div class="n">#${String(sp.id).padStart(2,"0")} ${known?sp.n:"???"}</div><div class="d">${known?typeChips(sp.t):REALMS[sp.realm].n}</div><div class="d">${known?pr[0]:""}${got?" · caught":""}</div></div>`;
+    if(known) drawSprite(d.querySelector("canvas"),sp,"front"); else { const c=d.querySelector("canvas"); const x=c.getContext("2d"); x.fillStyle="#1f4531"; x.fillRect(12,12,24,24); }
+    grid.appendChild(d); }
+  $("#codex-count").textContent=`${nS} of ${SPECIES.length} seen · ${nC} caught`;
+  $("#principles").innerHTML=Object.values(PRINCIPLES).map(([h,b])=>`<li><b>${h}.</b> ${b}</li>`).join("");
+}
+
+// ---------- hack lab ----------
+function renderHacks(){
+  const sel=$("#hack-active"); sel.innerHTML=HACKS.map((h,i)=>`<option value="${i}" ${i===ACTIVE_HACK?"selected":""}>${h.name}${h.builtin?" (built in)":""}</option>`).join("");
+  sel.onchange=()=>{ ACTIVE_HACK=+sel.value; saveHacks(); renderHacks(); toast(`Active: ${HACKS[ACTIVE_HACK].name}`); };
+  const h=HACKS[ACTIVE_HACK]; const ed=$("#hack-edit"); ed.innerHTML="";
+  const ro=!!h.builtin;
+  const top=document.createElement("div"); top.className="hrow";
+  top.innerHTML=`<label>Name<input type="text" id="hk-name" value="${h.name.replace(/"/g,"&quot;")}" ${ro?"disabled":""}></label>
+    <label>Wild level ×<input type="number" step="0.05" min="0.5" max="3" id="hk-wild" value="${h.wildLv}" ${ro?"disabled":""}></label>
+    <label>Catch rate ×<input type="number" step="0.05" min="0.1" max="3" id="hk-catch" value="${h.catchX}" ${ro?"disabled":""}></label>
+    <label>XP ×<input type="number" step="0.05" min="0.1" max="5" id="hk-xp" value="${h.xpX}" ${ro?"disabled":""}></label>`;
+  ed.appendChild(top);
+  if(ro){ const p=document.createElement("p"); p.className="muted"; p.textContent="Built-in hacks are read only. Duplicate one to make your own."; ed.appendChild(p); }
+  const wrap=document.createElement("div"); wrap.className="tablewrap";
+  const rows=SPECIES.map(b=>{ const o=(h.sp||{})[b.id]||{}; const st=o.st||b.st; const t=o.t||b.t; const evo=o.evo===null?null:(o.evo||b.evo);
+    return `<tr data-id="${b.id}"><td>${b.n}</td>
+      <td><input type="number" data-k="st0" value="${st[0]}" ${ro?"disabled":""}></td><td><input type="number" data-k="st1" value="${st[1]}" ${ro?"disabled":""}></td>
+      <td><input type="number" data-k="st2" value="${st[2]}" ${ro?"disabled":""}></td><td><input type="number" data-k="st3" value="${st[3]}" ${ro?"disabled":""}></td>
+      <td><select data-k="t0" ${ro?"disabled":""}>${TYPES.map(x=>`<option ${x===t[0]?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td><select data-k="t1" ${ro?"disabled":""}><option value="">—</option>${TYPES.map(x=>`<option ${x===t[1]?"selected":""}>${x}</option>`).join("")}</select></td>
+      <td>${b.evo?`<input type="number" data-k="evo" min="2" max="99" value="${evo?evo.lv:""}" placeholder="never" ${ro?"disabled":""}>`:"—"}</td></tr>`; }).join("");
+  wrap.innerHTML=`<table><thead><tr><th>Creature</th><th>HP</th><th>Atk</th><th>Def</th><th>Spd</th><th>Type 1</th><th>Type 2</th><th>Evolves at</th></tr></thead><tbody>${rows}</tbody></table>`;
+  ed.appendChild(wrap);
+  if(!ro){
+    const commit=()=>{ h.name=$("#hk-name").value||"Untitled hack"; h.wildLv=+$("#hk-wild").value||1; h.catchX=+$("#hk-catch").value||1; h.xpX=+$("#hk-xp").value||1; h.sp={};
+      wrap.querySelectorAll("tr[data-id]").forEach(tr=>{ const id=+tr.dataset.id, b=SPECIES_BY_ID[id]; const g=k=>tr.querySelector(`[data-k=${k}]`); const st=[+g("st0").value,+g("st1").value,+g("st2").value,+g("st3").value];
+        const t=[g("t0").value, g("t1").value].filter(Boolean); const o={};
+        if(st.some((v,i)=>v!==b.st[i])) o.st=st; if(t.join()!==b.t.join()) o.t=t;
+        if(b.evo){ const v=g("evo").value; if(v===""){ o.evo=null; } else if(+v!==b.evo.lv){ o.evo={to:b.evo.to,lv:+v}; } }
+        if(Object.keys(o).length) h.sp[id]=o; });
+      saveHacks(); };
+    ed.addEventListener("change",()=>{ commit(); sel.options[ACTIVE_HACK].textContent=h.name; });
+  }
+  $("#hack-text").value=JSON.stringify(h);
+}
+function bindHacks(){
+  $("#hack-new").onclick=()=>{ HACKS.push({name:"My hack "+(HACKS.length-1),sp:{},wildLv:1,catchX:1,xpX:1}); ACTIVE_HACK=HACKS.length-1; saveHacks(); renderHacks(); };
+  $("#hack-dup").onclick=()=>{ const c=JSON.parse(JSON.stringify(HACKS[ACTIVE_HACK])); delete c.builtin; c.name+=" copy"; HACKS.push(c); ACTIVE_HACK=HACKS.length-1; saveHacks(); renderHacks(); };
+  $("#hack-del").onclick=async()=>{ const h=HACKS[ACTIVE_HACK]; if(h.builtin){ toast("Built-in hacks can't be deleted."); return; } if(await confirmBox(`Delete "${h.name}"?`)){ HACKS.splice(ACTIVE_HACK,1); ACTIVE_HACK=0; saveHacks(); renderHacks(); } };
+  $("#hack-copy").onclick=()=>copyText($("#hack-text"),"Hack copied");
+  $("#hack-paste").onclick=()=>{ try{ const h=JSON.parse($("#hack-text").value); if(!h||typeof h.name!=="string") throw 0; delete h.builtin; h.sp=h.sp||{}; HACKS.push(h); ACTIVE_HACK=HACKS.length-1; saveHacks(); renderHacks(); toast(`Loaded "${h.name}"`); }catch(e){ toast("That text isn't a hack."); } };
+}
+function copyText(ta,msg){ const t=ta.value; (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(msg)).catch(()=>{ ta.focus(); ta.select(); toast("Select all and copy."); }); }
+
+// ---------- saves ----------
+function renderSlots(){
+  const box=$("#slots"); box.innerHTML="";
+  for(const n of [1,2,3]){ const s=slotInfo(n); const d=document.createElement("div"); d.className="slot";
+    d.innerHTML=s?`<div class="h">Slot ${n} · ${s.lead} Lv ${s.lv}</div><div class="d">${s.realm} · ${s.n} creatures · ${s.caught} caught · ${s.hack}<br>${new Date(s.saved).toLocaleString()}</div>`:`<div class="h">Slot ${n}</div><div class="d">Empty</div>`;
+    const row=document.createElement("div"); row.className="btnrow";
+    const mk=(l,fn,cls="")=>{ const b=document.createElement("button"); b.className="btn "+cls; b.textContent=l; b.onclick=fn; row.appendChild(b); return b; };
+    mk("Save here",async()=>{ if(!G){ toast("Nothing to save yet."); return; } if(s && !(await confirmBox(`Overwrite slot ${n}?`))) return; saveSlot(n)?toast(`Saved to slot ${n}`):toast("Couldn't write to this browser's storage."); renderSlots(); },"primary");
+    if(s){ mk("Load",async()=>{ if(G && !(await confirmBox("Load this slot? Unsaved progress is lost."))) return; try{ loadSlot(n); B=null; showTab("play"); enterWorld("Loaded."); toast(`Slot ${n} loaded`);}catch(e){ toast(e.message);} });
+      mk("Copy text",()=>{ $("#save-text").value=s.txt; copyText($("#save-text"),"Save text copied"); });
+      for(const o of [1,2,3]) if(o!==n) mk(`→ ${o}`,async()=>{ if(slotInfo(o) && !(await confirmBox(`Overwrite slot ${o} with slot ${n}?`))) return; copySlot(n,o); toast(`Copied to slot ${o}`); renderSlots(); });
+      mk("Delete",async()=>{ if(await confirmBox(`Delete slot ${n}?`)){ deleteSlot(n); renderSlots(); } },"danger"); }
+    d.appendChild(row); box.appendChild(d); }
+}
+function bindSaves(){
+  $("#save-copy").onclick=()=>{ if(!G){ toast("Nothing to copy yet."); return; } $("#save-text").value=serialize(); copyText($("#save-text"),"Current game copied"); };
+  for(const n of [1,2,3]) $("#save-load-"+n).onclick=()=>{ try{ const txt=$("#save-text").value.trim(); JSON.parse(txt); deserialize(txt); saveSlot(n); renderSlots(); toast(`Loaded into slot ${n}`); }catch(e){ toast("That text isn't a save."); } };
+}
+
+// ---------- boot ----------
+function start(hot){
+  $$(".tabs button").forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  $("#btn-new").onclick=()=>{ showScreen("starter"); renderStarters(); };
+  $("#btn-continue").onclick=()=>{ let best=null; for(const n of [1,2,3]){ const s=slotInfo(n); if(s&&(!best||s.saved>best.saved)) best={...s,n}; } if(best){ loadSlot(best.n); enterWorld("Welcome back."); } };
+  bindInput(); bindHacks(); bindSaves();
+  if(hot && hot.G){ G=hot.G; B=null; }
+  renderTitle(); renderCodex();
+  const tab=location.hash.replace("#",""); showTab(["play","party","codex","hacks","saves"].includes(tab)?tab:"play");
+  if(G) enterWorld("Resumed."); else showScreen("title");
+  if(window.claude && window.claude.hot && window.claude.hot.snapshot) window.claude.hot.snapshot(()=>({G}));
+  window.addEventListener("hashchange",()=>{ const t=location.hash.replace("#",""); if(["play","party","codex","hacks","saves"].includes(t)) showTab(t); });
+  // self-test hook for automated checks: ?selftest in the hash is not available, so use a global.
+  window.__realms={newGame,makeMon,startBattle,battleRound,stepPlayer,serialize,deserialize,getSpecies,calcStats,gainXp,get G(){return G;},get B(){return B;}};
+}
+(window.claude && window.claude.hot && window.claude.hot.ready) ? window.claude.hot.ready(start) : start((window.claude&&window.claude.hot&&window.claude.hot.data)||{});
+
+</script>

@@ -1,0 +1,145 @@
+{
+  "_comment": [
+    "Registry for the Pokémon Evolved Hub (apps/hub).",
+    "Each entry becomes one tab in the generated index.html.",
+    "Adding a future generation is a data edit here — no code change needed.",
+    "Regenerate the page with: python3 apps/hub/build_hub.py",
+    "status: playable | buildable | planned"
+  ],
+  "apps": [
+    {
+      "id": "gen1",
+      "tab": "Gen 1 · RBY",
+      "title": "Generation 1 — Red / Blue / Yellow",
+      "status": "playable",
+      "gen": 1,
+      "engine": "gen1recomp — LÖVE2D (Lua)",
+      "path": "engines/gen1recomp",
+      "summary": "A native LÖVE2D recreation of Pokémon Red, Blue and Yellow. The engine and map behaviour are hand-written Lua; game data and graphics are decoded from a ROM you supply. This is the one you can play outright today — no emulator, no ROM patching.",
+      "rom": {
+        "required": true,
+        "note": "Only the canonical 1 MiB US ROMs are accepted. The importer verifies SHA-1 before creating any game data, uses the ROM during import, then releases it from memory — it is never copied into the cache.",
+        "hashes": [
+          { "label": "Red", "sha1": "ea9bcae617fdf159b045185467ae58b2e4a48b9a" },
+          { "label": "Blue", "sha1": "d7037c83e1ae5b39bde3c30787637ba1d4c48ce2" },
+          { "label": "Yellow", "sha1": "cc7d03262ebfaf2f06772c1a480c7d9d5f4a38e1" }
+        ]
+      },
+      "launch": [
+        { "os": "macOS", "cmd": "./Play.sh gen1", "note": "or double-click engines/gen1recomp/Play-Mac.command" },
+        { "os": "Linux", "cmd": "./Play.sh gen1", "note": "needs love 11.x on PATH" },
+        { "os": "Windows", "cmd": "Play.bat gen1", "note": "or double-click engines/gen1recomp/Play-Windows.bat" }
+      ],
+      "steps": [
+        "Run the launcher for your platform.",
+        "On first boot, pick your legally obtained .gb / .gbc file or drop it onto the window.",
+        "Import takes a few seconds, then the game starts automatically.",
+        "Later launches load the generated cache and never ask for the ROM again."
+      ],
+      "links": [
+        { "label": "Upstream project", "href": "https://github.com/bryanthaboi/gen1recomp" },
+        { "label": "Vendored source", "href": "../../engines/gen1recomp/" },
+        { "label": "Engine README", "href": "../../engines/gen1recomp/README.md" },
+        { "label": "Modding guide", "href": "../../engines/gen1recomp/CONTRIBUTING-mods.md" },
+        { "label": "Vendoring notes", "href": "../../engines/VENDOR.md" }
+      ]
+    },
+    {
+      "id": "emerald",
+      "tab": "Gen 3 · Emerald",
+      "title": "Generation 3 — Emerald: Evolved Starters",
+      "status": "buildable",
+      "gen": 3,
+      "engine": "pret/pokeemerald decompilation — C + ARM assembly",
+      "path": ".",
+      "summary": "The original work in this repository: an Emerald ROM hack that extends the three Kanto starter lines with the official Pokémon Evolved expansion data plus our own DIY alternate branches. It builds a real .gba from the decompiled source at the repo root.",
+      "rom": {
+        "required": true,
+        "note": "Building links against a legally obtained US Emerald ROM. No ROM is distributed here.",
+        "hashes": [
+          { "label": "Emerald (build output)", "sha1": "f3ae088181bf583e55daf962a92bb46f4f1d07b7" }
+        ]
+      },
+      "launch": [
+        { "os": "Any", "cmd": "./Play.sh emerald", "note": "opens the evolution showcase" }
+      ],
+      "steps": [
+        "python3 tools/bootstrap_evolved_starters.py — apply starter species + evolution patches.",
+        "cd tools && npm install canvas && node generate_sprites.mjs — optional DIY sprites.",
+        "make tools -j$(nproc) then make -j$(nproc) — needs devkitARM + libpng.",
+        "Output: pokeemerald.gba"
+      ],
+      "links": [
+        { "label": "Evolution showcase", "href": "../../hack/showcase/pokemon-evolved-official-vs-diy.html" },
+        { "label": "Species data", "href": "../../hack/species.json" },
+        { "label": "Build instructions", "href": "../../INSTALL.md" },
+        { "label": "pret/pokeemerald", "href": "https://github.com/pret/pokeemerald" }
+      ]
+    },
+    {
+      "id": "realms",
+      "tab": "Realms · Original",
+      "title": "Emerald Realms — our own game",
+      "status": "playable",
+      "gen": null,
+      "engine": "apps/realms — self-contained HTML, no ROM, no dependencies",
+      "path": "apps/realms",
+      "summary": "An original monster-collector that runs in any browser, including as a Claude artifact. Thirty-six creatures of our own, seeded from the DIY starter lines and designed from the genre's first-two-generation principles. Five realms to walk between, battles, catching, evolution, three save slots with copy and transfer, and a Hack Lab where every stat, typing and evolution level is yours to rewrite. Nothing in it belongs to anyone else, which is what makes it the track that can be published.",
+      "rom": null,
+      "launch": [
+        { "os": "Any", "cmd": "./Play.sh realms", "note": "opens apps/realms/index.html" },
+        { "os": "Rebuild", "cmd": "python3 apps/realms/build.py", "note": "after editing apps/realms/src/" }
+      ],
+      "steps": [
+        "Open the game and choose one of three original starters.",
+        "Walk the Verdant Realm; tall grass holds wild creatures. The gold gates lead to the other realms.",
+        "Catch with orbs, heal at the green shrines, and find the guardian at the far shrine in the Dusk Realm.",
+        "Saves: three slots, each copyable to the others or out as text. Hack Lab: duplicate the base game and rewrite it."
+      ],
+      "links": [
+        { "label": "Play", "href": "../realms/index.html" },
+        { "label": "Source parts", "href": "../realms/src/" }
+      ]
+    },
+    {
+      "id": "next",
+      "tab": "Roadmap",
+      "title": "Future generations & the Emerald recomp",
+      "status": "planned",
+      "gen": null,
+      "engine": "to be decided",
+      "path": null,
+      "summary": "Where the next engines slot in. gen1recomp is vendored not just to be playable, but as a working reference for giving Emerald the same treatment — a native engine that reads a user-supplied ROM instead of patching one.",
+      "rom": null,
+      "launch": [],
+      "steps": [],
+      "links": []
+    }
+  ],
+  "roadmap": [
+    {
+      "title": "Emerald, recomp-style",
+      "status": "planned",
+      "detail": "Apply gen1recomp's architecture to Gen 3: verify a user-supplied Emerald ROM by SHA-1, decode data and graphics into a cache, and drive it from a hand-written engine. The Evolved starter lines then become engine data rather than ROM patches — editable without a rebuild.",
+      "reference": "engines/gen1recomp/src/import — the ROM import and decode pipeline to model this on."
+    },
+    {
+      "title": "Generation 2 — Gold / Silver / Crystal",
+      "status": "planned",
+      "detail": "The nearest neighbour to the Gen 1 engine; much of the map, battle and save handling in engines/gen1recomp/src generalises to the Gen 2 formats.",
+      "reference": "Register it in apps/hub/engines.json and it appears as a tab automatically."
+    },
+    {
+      "title": "Evolved species beyond the starters",
+      "status": "in progress",
+      "detail": "hack/species.json currently covers the three Kanto starter lines in both the official Evolved and DIY branches. It is the single source of truth for the Species tab and is designed to grow to the full roster.",
+      "reference": "hack/species.json"
+    },
+    {
+      "title": "Shared asset pipeline",
+      "status": "planned",
+      "detail": "One sprite and species pipeline feeding every engine, so a species defined once renders in the Gen 1 engine, the Emerald build, and the hub.",
+      "reference": "tools/generate_sprites.mjs, tools/bootstrap_evolved_starters.py"
+    }
+  ]
+}
