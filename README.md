@@ -47,6 +47,43 @@ exactly like a responsive bug that isn't there.
 
 ---
 
+## Emerald Realms — our own game
+
+`apps/realms` is an original monster-collector that runs in any browser with
+no ROM and no dependencies, including as a Claude artifact. It is the track
+that can be published, because nothing in it belongs to anyone else:
+
+- **36 original creatures** across five realms. The three starter lines grow
+  from the DIY designs (Florasaur, Charblaze, Torrentoise and their evolutions)
+  with new original base forms and no Kanto ancestry. The rest are designed
+  from the genre's first-two-generation principles — type-triangle starters,
+  the early bug, the route bird, the regional pest, one legend at the end —
+  which are ideas, not property. The Codex tab lists each rule openly.
+- **Five realms to walk between**, wild encounters in tall grass, turn-based
+  battles with a 12-type chart, catching, levelling, evolution, and a guardian
+  at the far shrine.
+- **Saves**: three slots in the browser, each copyable to another slot or out
+  as text and back in anywhere. (Artifacts can't start downloads, so copy-as-
+  text is the transfer mechanism by design.)
+- **Hack Lab**: duplicate the base game and rewrite any creature's stats,
+  typing or evolution level, plus wild-level, catch-rate and XP multipliers.
+  Hacks are shareable as text. A new journey starts on whichever hack is
+  active — "original hacks" means mods of our own game.
+- **Sprites are procedural**: each creature is drawn from a body plan on a
+  32×32 grid with a three-tone palette, outline and shading, seeded from its
+  name. A deliberate pixel style rather than hand-drawn art.
+
+```bash
+./Play.sh realms                 # open it
+python3 apps/realms/build.py     # rebuild index.html after editing apps/realms/src/
+```
+
+The page is assembled from `apps/realms/src/` (`data.js` roster and maps,
+`sprites.js`, `engine.js` rules, `ui.js`, `style.css`, `shell.html`) so each
+part stays readable; `index.html` is generated and self-contained.
+
+---
+
 ## Gen 3 — Emerald: Evolved Starters
 
 Emerald ROM hack built on [pret/pokeemerald](https://github.com/pret/pokeemerald). Extends the three Kanto starter lines with **official Pokémon Evolved** expansion names/data **plus** our **DIY alternate branches**.

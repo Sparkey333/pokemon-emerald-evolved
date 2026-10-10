@@ -22,6 +22,8 @@ if /i "%CMD%"=="rby"       goto gen1
 if /i "%CMD%"=="emerald"   goto emerald
 if /i "%CMD%"=="gen3"      goto emerald
 if /i "%CMD%"=="showcase"  goto emerald
+if /i "%CMD%"=="realms"    goto realms
+if /i "%CMD%"=="original"  goto realms
 if /i "%CMD%"=="build-hub" goto buildhub
 if /i "%CMD%"=="help"      goto usage
 if /i "%CMD%"=="-h"        goto usage
@@ -65,6 +67,14 @@ goto end
 :emerald
 echo ==^> opening the Emerald evolution showcase
 start "" "hack\showcase\pokemon-evolved-official-vs-diy.html"
+goto end
+
+:realms
+if not exist "apps\realms\index.html" (
+  where python >nul 2>&1 && python "apps\realms\build.py"
+)
+echo ==^> opening Emerald Realms
+start "" "apps\realms\index.html"
 goto end
 
 :buildhub

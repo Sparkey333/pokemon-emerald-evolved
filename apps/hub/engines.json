@@ -77,6 +77,31 @@
       ]
     },
     {
+      "id": "realms",
+      "tab": "Realms · Original",
+      "title": "Emerald Realms — our own game",
+      "status": "playable",
+      "gen": null,
+      "engine": "apps/realms — self-contained HTML, no ROM, no dependencies",
+      "path": "apps/realms",
+      "summary": "An original monster-collector that runs in any browser, including as a Claude artifact. Thirty-six creatures of our own, seeded from the DIY starter lines and designed from the genre's first-two-generation principles. Five realms to walk between, battles, catching, evolution, three save slots with copy and transfer, and a Hack Lab where every stat, typing and evolution level is yours to rewrite. Nothing in it belongs to anyone else, which is what makes it the track that can be published.",
+      "rom": null,
+      "launch": [
+        { "os": "Any", "cmd": "./Play.sh realms", "note": "opens apps/realms/index.html" },
+        { "os": "Rebuild", "cmd": "python3 apps/realms/build.py", "note": "after editing apps/realms/src/" }
+      ],
+      "steps": [
+        "Open the game and choose one of three original starters.",
+        "Walk the Verdant Realm; tall grass holds wild creatures. The gold gates lead to the other realms.",
+        "Catch with orbs, heal at the green shrines, and find the guardian at the far shrine in the Dusk Realm.",
+        "Saves: three slots, each copyable to the others or out as text. Hack Lab: duplicate the base game and rewrite it."
+      ],
+      "links": [
+        { "label": "Play", "href": "../realms/index.html" },
+        { "label": "Source parts", "href": "../realms/src/" }
+      ]
+    },
+    {
       "id": "next",
       "tab": "Roadmap",
       "title": "Future generations & the Emerald recomp",

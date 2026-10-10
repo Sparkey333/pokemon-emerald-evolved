@@ -1,0 +1,145 @@
+<title>Emerald Realms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/*__STYLE__*/
+</style>
+
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <span class="logo">Emerald Realms</span>
+      <span class="sub">an original monster-collector · five realms · your own hacks</span>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button data-tab="play" aria-selected="true">Play</button>
+      <button data-tab="party">Party</button>
+      <button data-tab="codex">Codex</button>
+      <button data-tab="hacks">Hack Lab</button>
+      <button data-tab="saves">Saves</button>
+    </nav>
+  </header>
+
+  <main class="stage">
+    <!-- PLAY -->
+    <section class="panel" id="tab-play">
+      <div id="screen-title" class="screen">
+        <h1 class="title">Emerald Realms</h1>
+        <p class="lede">Five realms, thirty-six original creatures, and a lab where you write your own hacks. Nothing here belongs to anyone else.</p>
+        <div class="btnrow">
+          <button class="btn primary" id="btn-new">New journey</button>
+          <button class="btn" id="btn-continue" hidden>Continue</button>
+        </div>
+        <p class="hint" id="title-hint"></p>
+      </div>
+
+      <div id="screen-starter" class="screen" hidden>
+        <h2>Choose your partner</h2>
+        <p class="muted">Each line evolves twice. Grass beats Water, Water beats Fire, Fire beats Grass.</p>
+        <div class="starters" id="starters"></div>
+      </div>
+
+      <div id="screen-world" class="screen" hidden>
+        <div class="worldbar">
+          <span class="realm" id="realm-name"></span>
+          <span class="muted" id="world-hint">Arrows / WASD to move · walk in tall grass</span>
+        </div>
+        <div class="worldwrap">
+          <canvas id="map" width="512" height="384"></canvas>
+          <div class="dpad" aria-label="Move">
+            <button data-dir="up" aria-label="Up">▲</button>
+            <button data-dir="left" aria-label="Left">◀</button>
+            <button data-dir="down" aria-label="Down">▼</button>
+            <button data-dir="right" aria-label="Right">▶</button>
+          </div>
+        </div>
+        <div class="log" id="world-log"></div>
+      </div>
+
+      <div id="screen-battle" class="screen" hidden>
+        <div class="arena">
+          <div class="side foe">
+            <div class="plate"><span class="mname" id="foe-name"></span><span class="lv" id="foe-lv"></span>
+              <div class="hpbar"><div class="hp" id="foe-hp"></div></div></div>
+            <canvas class="sprite" id="foe-sprite" width="96" height="96"></canvas>
+          </div>
+          <div class="side ally">
+            <canvas class="sprite" id="ally-sprite" width="96" height="96"></canvas>
+            <div class="plate"><span class="mname" id="ally-name"></span><span class="lv" id="ally-lv"></span>
+              <div class="hpbar"><div class="hp" id="ally-hp"></div></div>
+              <div class="hptext" id="ally-hptext"></div>
+              <div class="xpbar"><div class="xp" id="ally-xp"></div></div></div>
+          </div>
+        </div>
+        <div class="battlelog" id="battle-log"></div>
+        <div class="bmenu" id="battle-menu"></div>
+      </div>
+    </section>
+
+    <!-- PARTY -->
+    <section class="panel" id="tab-party" hidden>
+      <h2>Party</h2>
+      <p class="muted">Tap a creature to make it lead. Up to six travel with you; the rest wait in the box.</p>
+      <div class="partygrid" id="party-grid"></div>
+      <h3>Box</h3>
+      <div class="partygrid" id="box-grid"></div>
+    </section>
+
+    <!-- CODEX -->
+    <section class="panel" id="tab-codex">
+      <h2>Codex</h2>
+      <p class="muted" id="codex-count"></p>
+      <div class="codexgrid" id="codex-grid"></div>
+      <h3>Design principles</h3>
+      <p class="muted">Every creature follows a rule the first two generations of the genre established. The rules are ideas, and ideas belong to everyone; the creatures that follow them here are ours.</p>
+      <ul class="principles" id="principles"></ul>
+    </section>
+
+    <!-- HACKS -->
+    <section class="panel" id="tab-hacks" hidden>
+      <h2>Hack Lab</h2>
+      <p class="muted">A hack is a set of changes layered over the base game: rebalanced stats, new typings, different evolution levels, harder wilds. Save as many as you like. A new journey starts on whichever hack is active.</p>
+      <div class="hackbar">
+        <label>Active hack <select id="hack-active"></select></label>
+        <button class="btn" id="hack-new">New hack</button>
+        <button class="btn" id="hack-dup">Duplicate</button>
+        <button class="btn danger" id="hack-del">Delete</button>
+      </div>
+      <div class="hackedit" id="hack-edit"></div>
+      <h3>Share</h3>
+      <p class="muted">Copy the text to keep or share a hack. Paste one in to load it.</p>
+      <textarea id="hack-text" rows="5" spellcheck="false"></textarea>
+      <div class="btnrow">
+        <button class="btn" id="hack-copy">Copy active hack</button>
+        <button class="btn" id="hack-paste">Load from text</button>
+      </div>
+    </section>
+
+    <!-- SAVES -->
+    <section class="panel" id="tab-saves" hidden>
+      <h2>Saves</h2>
+      <p class="muted">Three slots live in this browser. Copy a slot's text to back it up or move it anywhere; paste text to restore it.</p>
+      <div class="slots" id="slots"></div>
+      <h3>Transfer</h3>
+      <textarea id="save-text" rows="5" spellcheck="false" placeholder="Paste save text here, then choose a slot to load it into."></textarea>
+      <div class="btnrow">
+        <button class="btn" id="save-copy">Copy current game</button>
+        <button class="btn" id="save-load-1">Load text → slot 1</button>
+        <button class="btn" id="save-load-2">Load text → slot 2</button>
+        <button class="btn" id="save-load-3">Load text → slot 3</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+  <div class="modal" id="modal" hidden>
+    <div class="modalbox">
+      <p id="modal-text"></p>
+      <div class="btnrow"><button class="btn" id="modal-no">Cancel</button><button class="btn primary" id="modal-yes">Confirm</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+//__SCRIPT__
+</script>

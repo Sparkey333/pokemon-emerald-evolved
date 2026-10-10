@@ -6,6 +6,7 @@
 #   ./Play.sh gen1               play Gen 1 (Red/Blue/Yellow) via engines/gen1recomp
 #   ./Play.sh gen1 --rom FILE    ...pointing the importer at a specific ROM
 #   ./Play.sh emerald            open the Emerald evolution showcase
+#   ./Play.sh realms             play Emerald Realms, our original game (no ROM needed)
 #   ./Play.sh build-hub          regenerate apps/hub/index.html from source data
 #
 # No ROMs ship with this repository. Gen 1 asks for your own legally obtained
@@ -72,6 +73,16 @@ case "$cmd" in
   emerald|gen3|showcase)
     say "opening the Emerald evolution showcase"
     open_file "$ROOT/hack/showcase/pokemon-evolved-official-vs-diy.html"
+    ;;
+
+  realms|original)
+    game="$ROOT/apps/realms/index.html"
+    if [ ! -f "$game" ] && command -v python3 >/dev/null 2>&1; then
+      say "building the game page"
+      python3 "$ROOT/apps/realms/build.py"
+    fi
+    say "opening Emerald Realms"
+    open_file "$game"
     ;;
 
   build-hub)
