@@ -59,6 +59,10 @@ __pycache__/
 # precedence and its build artifacts stay ignored.
 !engines/gen1recomp/**
 
+# apps/ is our own code, not decomp build output. The *.js rule above is for
+# generated tools; it would silently drop apps/realms/src/*.js (it did once).
+!/apps/**/*.js
+
 # ...but never absorb the two large third-party trees that upstream tracks and
 # we deliberately do not vendor (~186 MB of LOVE/SDL2/LuaJIT/oboe sources and
 # prebuilt ANGLE/SDL2/OpenAL DLLs). engines/restore-gen1recomp-blobs.sh drops
